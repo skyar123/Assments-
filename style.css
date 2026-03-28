@@ -765,5 +765,31 @@ p:last-child { margin-bottom: 0; }
   .team-detail-header { flex-direction: column; text-align: center; }
 }
 
+/* === Training Badge === */
+.training-badge {
+  display: inline-block;
+  background: var(--terra-100);
+  color: var(--terra-700);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 4px 14px;
+  margin-bottom: 8px;
+}
+
+/* === Directory Category Header === */
+.directory-category {
+  border-top: 2px solid var(--sage-200);
+  padding-top: 32px;
+  margin-top: 40px;
+}
+.directory-category:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
 /* === Print === */
 @media print { .nav,.footer,.cta { display:none; } body { background:#fff; } }
