@@ -94,4 +94,44 @@
       }
     });
   }
+
+  // ── Team card expand/collapse ──
+  document.querySelectorAll('.team-card[data-member]').forEach(function (card) {
+    card.addEventListener('click', function () {
+      var id = 'detail-' + card.getAttribute('data-member');
+      var overlay = document.getElementById(id);
+      if (overlay) {
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  document.querySelectorAll('.team-detail-overlay').forEach(function (overlay) {
+    // Close on X button
+    var closeBtn = overlay.querySelector('.team-detail-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+    // Close on backdrop click
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  // Close team detail on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.team-detail-overlay.open').forEach(function (overlay) {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+  });
 })();
