@@ -791,5 +791,20 @@ p:last-child { margin-bottom: 0; }
   margin-top: 0;
 }
 
+/* === Team Strip (homepage) === */
+.team-strip { display:grid; grid-template-columns:repeat(5,1fr); gap:20px; text-align:center; }
+@media (max-width:900px) { .team-strip { grid-template-columns:repeat(3,1fr); } }
+@media (max-width:540px) { .team-strip { grid-template-columns:repeat(2,1fr); } }
+.team-strip-member { display:flex; flex-direction:column; align-items:center; }
+.team-strip-member img { width:96px; height:96px; border-radius:50%; object-fit:cover; margin-bottom:12px; border:3px solid var(--sage-100); }
+.team-strip-member .strip-name { font-weight:700; font-size:0.92rem; margin-bottom:4px; color:var(--neutral-800); }
+.team-strip-member .strip-role { font-size:0.76rem; color:var(--neutral-400); line-height:1.4; }
+
+/* === Home Subscribe Box === */
+.home-subscribe-box { background:var(--sage-800); border-radius:var(--r-xl); padding:44px 48px; text-align:center; margin-top:48px; }
+.home-subscribe-box h3 { color:var(--white); font-size:1.3rem; margin-bottom:8px; }
+.home-subscribe-box p { color:var(--sage-200); font-size:0.9rem; margin:0 auto 28px; max-width:480px; }
+@media (max-width:600px) { .home-subscribe-box { padding:36px 24px; } }
+
 /* === Print === */
 @media print { .nav,.footer,.cta { display:none; } body { background:#fff; } }
