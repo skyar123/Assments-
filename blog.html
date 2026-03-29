@@ -133,14 +133,22 @@
         <span class="overline" style="color:var(--sage-300);">Join the Circle — Free</span>
         <h2>Become a Circle Member</h2>
         <p>Free subscribers get access to our full resource library: 25+ clinical guides, family handouts, and practitioner tools — delivered to your inbox. Plus monthly Field Notes and early access to trainings.</p>
-        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <p class="sr-only"><label>Don&rsquo;t fill this out: <input name="bot-field"></label></p>
+        <!--
+          KIT (formerly ConvertKit) — Free up to 10,000 subscribers
+          ============================================================
+          1. Sign up at kit.com (free)
+          2. Grow → Landing Pages & Forms → New Form → Inline
+          3. Copy your Form ID from the URL (the number in app.kit.com/forms/XXXXXXXX)
+          4. Replace YOUR_FORM_ID in the action URL below
+          ============================================================
+        -->
+        <form action="https://app.kit.com/forms/YOUR_FORM_ID/subscriptions" method="POST" target="_blank">
           <div class="subscribe-form">
-            <input type="email" name="email" required placeholder="your@email.com" aria-label="Email address">
+            <input type="email" name="email_address" required placeholder="your@email.com" aria-label="Email address">
             <button type="submit">Join Free &rarr;</button>
           </div>
         </form>
-        <p class="subscribe-note">We never share your email. Unsubscribe any time. &nbsp;&bull;&nbsp; <a href="community.html" style="color:var(--sage-300);">Learn what members get &rarr;</a></p>
+        <p class="subscribe-note">We never share your email. Unsubscribe any time. &nbsp;&bull;&nbsp; <a href="subscribe.html" style="color:var(--sage-300);">Dedicated subscribe page &rarr;</a></p>
       </div>
     </div>
   </section>
