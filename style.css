@@ -806,6 +806,20 @@ p:last-child { margin-bottom: 0; }
 .home-subscribe-box p { color:var(--sage-200); font-size:0.9rem; margin:0 auto 28px; max-width:480px; }
 @media (max-width:600px) { .home-subscribe-box { padding:36px 24px; } }
 
+/* === Homepage Subscribe Strip === */
+.subscribe-strip { background:var(--sage-800); padding:28px 0; }
+.subscribe-strip-inner { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.subscribe-strip-text { flex:1; min-width:200px; }
+.subscribe-strip-text strong { display:block; color:var(--white); font-size:1rem; margin-bottom:2px; }
+.subscribe-strip-text span { color:var(--sage-300); font-size:0.83rem; }
+.subscribe-strip-form { display:flex; gap:10px; flex:2; max-width:480px; }
+.subscribe-strip-form input { flex:1; padding:12px 16px; border-radius:var(--r-md); border:none; font-size:0.9rem; background:rgba(255,255,255,0.12); color:var(--white); outline:none; font-family:inherit; }
+.subscribe-strip-form input::placeholder { color:rgba(255,255,255,0.5); }
+.subscribe-strip-form input:focus { background:rgba(255,255,255,0.2); }
+.subscribe-strip-form button { padding:12px 22px; border-radius:var(--r-md); border:none; background:var(--terra-500); color:var(--white); font-size:0.88rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:background var(--dur) var(--ease); font-family:inherit; }
+.subscribe-strip-form button:hover { background:var(--terra-600); }
+@media (max-width:640px) { .subscribe-strip-inner { flex-direction:column; align-items:flex-start; gap:16px; } .subscribe-strip-form { width:100%; max-width:100%; } .subscribe-strip-form button { width:100%; } }
+
 /* === Blog Post Media === */
 .post-img { width:100%; border-radius:var(--r-lg); margin:28px 0; display:block; }
 .post-img-caption { font-size:0.78rem; color:var(--neutral-400); text-align:center; margin-top:-20px; margin-bottom:28px; font-style:italic; }
