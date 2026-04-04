@@ -4,21 +4,36 @@
   'use strict';
 
   // ── Mobile nav toggle ──
-  const toggle = document.querySelector('.nav-toggle');
-  const links = document.querySelector('.nav-links');
-  if (toggle && links) {
+  var toggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+
+  if (toggle && navLinks) {
     toggle.addEventListener('click', function () {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      var expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!expanded));
-      links.classList.toggle('open');
+      navLinks.classList.toggle('open');
+
+      if (!expanded) {
+        var firstLink = navLinks.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }
     });
 
     // Close menu when a link is clicked
-    links.querySelectorAll('a').forEach(function (link) {
+    navLinks.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
-        links.classList.remove('open');
+        navLinks.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
       });
+    });
+
+    // Close nav on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+        navLinks.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
     });
   }
 
@@ -36,7 +51,6 @@
       },
       { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
     );
-    // Immediately show elements already in viewport, observe the rest
     animEls.forEach(function (el) {
       var rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
@@ -46,16 +60,26 @@
       }
     });
   } else {
-    // Fallback: show everything immediately
-    animEls.forEach(function (el) {
-      el.classList.add('visible');
-    });
+    animEls.forEach(function (el) { el.classList.add('visible'); });
   }
 
   // ── Accordion (Frameworks page) ──
-  document.querySelectorAll('.accordion-header').forEach(function (btn) {
+  document.querySelectorAll('.accordion-header').forEach(function (btn, i) {
+    var item = btn.closest('.accordion-item');
+    var body = btn.nextElementSibling;
+    var panelId = 'accordion-panel-' + i;
+    var btnId = 'accordion-btn-' + i;
+
+    if (!btn.id) btn.id = btnId;
+    if (body) {
+      body.id = panelId;
+      body.setAttribute('role', 'region');
+      body.setAttribute('aria-labelledby', btn.id);
+    }
+    btn.setAttribute('aria-controls', panelId);
+    btn.setAttribute('aria-expanded', item.classList.contains('open') ? 'true' : 'false');
+
     btn.addEventListener('click', function () {
-      var item = btn.closest('.accordion-item');
       var isOpen = item.classList.contains('open');
 
       // Close all
@@ -87,51 +111,79 @@
   var nav = document.querySelector('.nav');
   if (nav) {
     window.addEventListener('scroll', function () {
-      if (window.scrollY > 10) {
-        nav.style.boxShadow = 'var(--shadow-sm)';
-      } else {
-        nav.style.boxShadow = 'none';
-      }
+      nav.style.boxShadow = window.scrollY > 10 ? 'var(--shadow-sm)' : 'none';
     });
   }
 
-  // ── Team card expand/collapse ──
+  // ── Team card modals ──
+  function openTeamDetail(memberId) {
+    var overlay = document.getElementById('detail-' + memberId);
+    if (!overlay) return;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+
+    var closeBtn = overlay.querySelector('.team-detail-close');
+    if (closeBtn) closeBtn.focus();
+
+    // Focus trap
+    var focusable = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    function trapFocus(e) {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+      } else {
+        if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+      }
+    }
+
+    overlay._trapFocus = trapFocus;
+    overlay.addEventListener('keydown', trapFocus);
+    overlay._trigger = document.querySelector('[data-member="' + memberId + '"]');
+  }
+
+  function closeTeamDetail(overlay) {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if (overlay._trapFocus) overlay.removeEventListener('keydown', overlay._trapFocus);
+    if (overlay._trigger) overlay._trigger.focus();
+  }
+
   document.querySelectorAll('.team-card[data-member]').forEach(function (card) {
     card.addEventListener('click', function () {
-      var id = 'detail-' + card.getAttribute('data-member');
-      var overlay = document.getElementById(id);
-      if (overlay) {
-        overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
+      openTeamDetail(card.getAttribute('data-member'));
+    });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openTeamDetail(card.getAttribute('data-member'));
       }
     });
+    if (!card.getAttribute('tabindex')) card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
   });
 
   document.querySelectorAll('.team-detail-overlay').forEach(function (overlay) {
-    // Close on X button
     var closeBtn = overlay.querySelector('.team-detail-close');
     if (closeBtn) {
-      closeBtn.addEventListener('click', function () {
-        overlay.classList.remove('open');
-        document.body.style.overflow = '';
-      });
+      closeBtn.addEventListener('click', function () { closeTeamDetail(overlay); });
     }
-    // Close on backdrop click
     overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) {
-        overlay.classList.remove('open');
-        document.body.style.overflow = '';
-      }
+      if (e.target === overlay) closeTeamDetail(overlay);
     });
   });
 
-  // Close team detail on Escape
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       document.querySelectorAll('.team-detail-overlay.open').forEach(function (overlay) {
-        overlay.classList.remove('open');
-        document.body.style.overflow = '';
+        closeTeamDetail(overlay);
       });
     }
   });
+
 })();
