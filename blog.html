@@ -10,7 +10,8 @@
   <style>
     .post-card { background:var(--white); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); overflow:hidden; transition:all var(--dur) var(--ease); display:flex; flex-direction:column; }
     .post-card:hover { box-shadow:var(--shadow-md); transform:translateY(-3px); }
-    .post-thumb { height:160px; background:var(--sage-100); flex-shrink:0; }
+    .post-thumb { height:160px; background:var(--sage-100); flex-shrink:0; overflow:hidden; }
+    .post-thumb img { width:100%; height:100%; object-fit:cover; }
     .post-thumb.pt-terra { background:var(--terra-100); }
     .post-thumb.pt-lav { background:var(--lav-100); }
     .post-body { padding:24px; flex:1; display:flex; flex-direction:column; }
@@ -52,84 +53,85 @@
     </div>
   </section>
 
-  <!-- Posts grid -->
+  <!-- Posts grid — dynamically loaded from Ghost -->
   <section class="section">
     <div class="container">
       <div class="section-header">
         <span class="overline">Latest</span>
         <h2>Recent posts</h2>
       </div>
-      <div class="grid-3">
-
-        <div class="post-card anim">
-          <div class="post-thumb"></div>
-          <div class="post-body">
-            <span class="post-access pa-free">Free</span>
-            <div class="post-meta">Gabriel Guyton &nbsp;&middot;&nbsp; March 2026</div>
-            <h3>Bridging Attachment, Trauma, and Neurodiversity in Early Childhood Clinical Practice</h3>
-            <p>A framework for holding three powerful lenses simultaneously - without flattening any of them. How do we stay attuned to attachment needs, honor neurodivergent nervous systems, and hold trauma history in the same room?</p>
-            <a href="blog/attachment-trauma-neurodiversity.html" class="read-link">Read more <span class="arrow">&rarr;</span></a>
-          </div>
+      <div class="grid-3" id="ghost-posts">
+        <div class="post-card" style="opacity:0.5;text-align:center;padding:60px 24px;grid-column:1/-1;">
+          <p style="color:var(--neutral-400);">Loading posts...</p>
         </div>
-
-        <div class="post-card anim anim-d1">
-          <div class="post-thumb pt-terra"></div>
-          <div class="post-body">
-            <span class="post-access pa-member">Circle Members</span>
-            <div class="post-meta">Skylar Belt &nbsp;&middot;&nbsp; February 2026</div>
-            <h3>After Helene: What Therapeutic Playgroups Taught Us About Community Resilience</h3>
-            <p>In the weeks after Hurricane Helene, we created play spaces in living rooms and community centers across Asheville. Here&rsquo;s what we learned about what children - and caregivers - actually need in a crisis.</p>
-            <a href="blog/after-helene-playgroups.html" class="read-link">Read more <span class="arrow">&rarr;</span></a>
-          </div>
-        </div>
-
-        <div class="post-card anim anim-d2">
-          <div class="post-thumb pt-lav"></div>
-          <div class="post-body">
-            <span class="post-access pa-member">Circle Members</span>
-            <div class="post-meta">Omaira Ojeda &nbsp;&middot;&nbsp; January 2026</div>
-            <h3>Raising Bilingual Children: What the Research Says and What Families Actually Ask Us</h3>
-            <p>Parents ask us all the time: &ldquo;Will two languages confuse my child?&rdquo; The short answer is no. The longer answer is about what bilingualism actually does to a developing brain - and why it&rsquo;s a gift, not a risk.</p>
-            <a href="blog/raising-bilingual-children.html" class="read-link">Read more <span class="arrow">&rarr;</span></a>
-          </div>
-        </div>
-
-        <div class="post-card anim">
-          <div class="post-thumb pt-lav"></div>
-          <div class="post-body">
-            <span class="post-access pa-free">Free</span>
-            <div class="post-meta">Gabriel Guyton &nbsp;&middot;&nbsp; December 2025</div>
-            <h3>Shark Music: Why You React the Way You Do to Your Child&rsquo;s Behavior</h3>
-            <p>You know the scene in <em>Jaws</em> where you feel dread before anything has even happened? That&rsquo;s shark music. Circle of Security teaches us that every caregiver has their own version of it - and it shapes everything.</p>
-            <a href="blog/shark-music.html" class="read-link">Read more <span class="arrow">&rarr;</span></a>
-          </div>
-        </div>
-
-        <div class="post-card anim anim-d1">
-          <div class="post-thumb"></div>
-          <div class="post-body">
-            <span class="post-access pa-member">Circle Members</span>
-            <div class="post-meta">Skylar Belt &nbsp;&middot;&nbsp; November 2025</div>
-            <h3>What Is a Shoebox Task? TEACCH Methodology for Classrooms and Homes</h3>
-            <p>Shoebox tasks aren&rsquo;t just for clinicians. Any educator or parent can build them with recycled materials in under an hour. Here&rsquo;s the engineering logic behind why they work so well for autistic children.</p>
-            <a href="blog/shoebox-tasks-teacch.html" class="read-link">Read more <span class="arrow">&rarr;</span></a>
-          </div>
-        </div>
-
-        <div class="post-card anim anim-d2">
-          <div class="post-thumb pt-terra"></div>
-          <div class="post-body">
-            <span class="post-access pa-member">Circle Members</span>
-            <div class="post-meta">Gabriel Guyton &nbsp;&middot;&nbsp; October 2025</div>
-            <h3>The BEAR Program: What Happened When We Gave Every Child a Teddy Bear</h3>
-            <p>We placed personal teddy bears in classrooms across Western North Carolina. Teachers were skeptical. Six months later, they were asking for more bears. Here&rsquo;s the data and the stories behind it.</p>
-            <a href="blog/bear-program-story.html" class="read-link">Read more <span class="arrow">&rarr;</span></a>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
+
+  <script>
+  (function () {
+    var API = 'https://connected-circles.ghost.io/ghost/api/content/posts/';
+    var KEY = '173c2ca8bce5d07e1c0d5998a2';
+    var grid = document.getElementById('ghost-posts');
+
+    fetch(API + '?key=' + KEY + '&limit=12&include=tags,authors&fields=title,custom_excerpt,excerpt,url,published_at,feature_image,visibility&include=authors,tags')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data.posts || !data.posts.length) {
+          grid.innerHTML = '<div style="text-align:center;padding:60px 24px;grid-column:1/-1;"><p style="color:var(--neutral-500);">No posts yet. Check back soon!</p></div>';
+          return;
+        }
+        grid.innerHTML = '';
+        var delays = ['', ' anim-d1', ' anim-d2'];
+        data.posts.forEach(function (post, i) {
+          var date = new Date(post.published_at);
+          var month = date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+          var author = post.authors && post.authors[0] ? post.authors[0].name : 'ConnectEd Circles';
+          var tag = post.tags && post.tags[0] ? post.tags[0].name : '';
+          var excerpt = post.custom_excerpt || post.excerpt || '';
+          if (excerpt.length > 180) excerpt = excerpt.substring(0, 177) + '...';
+          var isFree = post.visibility === 'public';
+          var thumb = post.feature_image
+            ? '<div class="post-thumb"><img src="' + post.feature_image + '" alt="' + post.title.replace(/"/g, '&quot;') + '" loading="lazy"></div>'
+            : '<div class="post-thumb"></div>';
+          var accessClass = isFree ? 'pa-free' : 'pa-member';
+          var accessLabel = isFree ? 'Free' : 'Members';
+
+          var card = document.createElement('div');
+          card.className = 'post-card anim' + delays[i % 3];
+          card.innerHTML = thumb +
+            '<div class="post-body">' +
+              '<span class="post-access ' + accessClass + '">' + accessLabel + '</span>' +
+              (tag ? '<span class="post-access" style="background:var(--neutral-100);color:var(--neutral-500);margin-left:6px;">' + tag + '</span>' : '') +
+              '<div class="post-meta">' + author + ' &middot; ' + month + '</div>' +
+              '<h3>' + post.title + '</h3>' +
+              '<p>' + excerpt + '</p>' +
+              '<a href="' + post.url + '" class="read-link">Read on Field Notes <span class="arrow">&rarr;</span></a>' +
+            '</div>';
+          grid.appendChild(card);
+        });
+
+        // trigger scroll animations for the new cards
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+          }, { threshold: 0.1 });
+          grid.querySelectorAll('.anim').forEach(function (el) {
+            var r = el.getBoundingClientRect();
+            if (r.top < window.innerHeight) el.classList.add('visible');
+            else observer.observe(el);
+          });
+        } else {
+          grid.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
+        }
+      })
+      .catch(function () {
+        grid.innerHTML = '<div style="text-align:center;padding:60px 24px;grid-column:1/-1;">' +
+          '<p style="color:var(--neutral-500);margin-bottom:16px;">Could not load posts right now.</p>' +
+          '<a href="https://connected-circles.ghost.io" class="btn btn-outline" target="_blank" rel="noopener">Visit Field Notes directly &rarr;</a></div>';
+      });
+  })();
+  </script>
 
   <!-- Mailing List -->
   <section class="section">
