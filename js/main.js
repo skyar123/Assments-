@@ -186,4 +186,62 @@
     }
   });
 
+  // ── Ghost subscribe forms ──
+  // Ghost blocks direct POST to /subscribe from external domains.
+  // We intercept all subscribe forms and call the members magic-link API instead.
+  var GHOST = 'https://connected-circles.ghost.io';
+
+  document.querySelectorAll('form[action*="ghost.io/subscribe"], form[action*="ghost.io/members"]').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var emailInput = form.querySelector('input[type="email"]');
+      var btn = form.querySelector('button[type="submit"], button:not([type])');
+      if (!emailInput) return;
+
+      var email = emailInput.value.trim();
+      if (!email) { emailInput.focus(); return; }
+
+      var origText = btn ? btn.textContent : '';
+      if (btn) { btn.textContent = 'Sending\u2026'; btn.disabled = true; }
+
+      fetch(GHOST + '/members/api/send-magic-link/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, emailType: 'subscribe', labels: [] })
+      })
+        .then(function (res) {
+          if (res.ok || res.status === 201) {
+            showFormMsg(form, 'Check your inbox! We sent a confirmation link to ' + email + '.', 'success');
+            emailInput.value = '';
+          } else {
+            return res.json().then(function (d) {
+              var msg = (d && d.errors && d.errors[0] && d.errors[0].message) || 'Something went wrong. Try again.';
+              showFormMsg(form, msg, 'error');
+            });
+          }
+        })
+        .catch(function () {
+          showFormMsg(form, 'Could not connect. Check your internet connection and try again.', 'error');
+        })
+        .finally(function () {
+          if (btn) { btn.textContent = origText; btn.disabled = false; }
+        });
+    });
+  });
+
+  function showFormMsg(form, msg, type) {
+    var existing = form.parentNode.querySelector('.form-feedback');
+    if (existing) existing.remove();
+    var el = document.createElement('p');
+    el.className = 'form-feedback';
+    el.textContent = msg;
+    el.style.cssText = 'font-size:0.85rem;margin-top:12px;text-align:center;' +
+      (type === 'success'
+        ? 'color:#5d8a72;'
+        : 'color:#c06030;');
+    form.parentNode.insertBefore(el, form.nextSibling);
+    setTimeout(function () { if (el.parentNode) el.remove(); }, 8000);
+  }
+
 })();
