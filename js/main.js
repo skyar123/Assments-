@@ -187,8 +187,9 @@
   });
 
   // ── Ghost subscribe forms ──
-  // Ghost blocks direct POST to /subscribe from external domains.
-  // We intercept all subscribe forms and call the members magic-link API instead.
+  // Ghost's /subscribe endpoint is CSRF-protected (same-origin only).
+  // Strategy: try the members magic-link API; if Ghost rejects it for any
+  // reason, fall back to opening Ghost Portal signup in a new tab.
   var GHOST = 'https://connected-circles.ghost.io';
 
   document.querySelectorAll('form[action*="ghost.io/subscribe"], form[action*="ghost.io/members"]').forEach(function (form) {
@@ -207,28 +208,35 @@
 
       fetch(GHOST + '/members/api/send-magic-link/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, emailType: 'subscribe', labels: [] })
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email, emailType: 'signup', requestSrc: 'subscribe-form' })
       })
         .then(function (res) {
           if (res.ok || res.status === 201) {
-            showFormMsg(form, 'Check your inbox! We sent a confirmation link to ' + email + '.', 'success');
+            showFormMsg(form, '\u2713 Check your inbox! We sent a confirmation link to ' + email + '.', 'success');
             emailInput.value = '';
           } else {
-            return res.json().then(function (d) {
-              var msg = (d && d.errors && d.errors[0] && d.errors[0].message) || 'Something went wrong. Try again.';
-              showFormMsg(form, msg, 'error');
-            });
+            // API rejected — open Ghost Portal as fallback
+            ghostPortalFallback(form, email);
           }
         })
         .catch(function () {
-          showFormMsg(form, 'Could not connect. Check your internet connection and try again.', 'error');
+          // CORS or network issue — open Ghost Portal as fallback
+          ghostPortalFallback(form, email);
         })
         .finally(function () {
           if (btn) { btn.textContent = origText; btn.disabled = false; }
         });
     });
   });
+
+  function ghostPortalFallback(form, email) {
+    // Open Ghost Portal signup in a new tab; tell the user to use the email they typed
+    window.open(GHOST + '/#/portal/signup', '_blank', 'noopener,noreferrer');
+    showFormMsg(form,
+      '\u2713 A signup page opened in a new tab. Enter ' + email + ' there to subscribe.',
+      'success');
+  }
 
   function showFormMsg(form, msg, type) {
     var existing = form.parentNode.querySelector('.form-feedback');
@@ -237,11 +245,9 @@
     el.className = 'form-feedback';
     el.textContent = msg;
     el.style.cssText = 'font-size:0.85rem;margin-top:12px;text-align:center;' +
-      (type === 'success'
-        ? 'color:#5d8a72;'
-        : 'color:#c06030;');
+      (type === 'success' ? 'color:#5d8a72;' : 'color:#c06030;');
     form.parentNode.insertBefore(el, form.nextSibling);
-    setTimeout(function () { if (el.parentNode) el.remove(); }, 8000);
+    setTimeout(function () { if (el.parentNode) el.remove(); }, 10000);
   }
 
 })();
