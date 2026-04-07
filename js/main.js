@@ -187,10 +187,8 @@
   });
 
   // ── Ghost subscribe forms ──
-  // Ghost's /subscribe endpoint is CSRF-protected (same-origin only).
-  // Strategy: try the members magic-link API; if Ghost rejects it for any
-  // reason, fall back to opening Ghost Portal signup in a new tab.
-  var GHOST = 'https://connected-circles.ghost.io';
+  // Calls a Netlify Function that proxies the request to Ghost server-to-server,
+  // bypassing the CORS restriction that blocks browser → Ghost direct calls.
 
   document.querySelectorAll('form[action*="ghost.io/subscribe"], form[action*="ghost.io/members"]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
@@ -206,37 +204,28 @@
       var origText = btn ? btn.textContent : '';
       if (btn) { btn.textContent = 'Sending\u2026'; btn.disabled = true; }
 
-      fetch(GHOST + '/members/api/send-magic-link/', {
+      fetch('/.netlify/functions/ghost-subscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email: email, emailType: 'signup', requestSrc: 'subscribe-form' })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
       })
-        .then(function (res) {
-          if (res.ok || res.status === 201) {
+        .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+        .then(function (result) {
+          if (result.ok && result.data.success) {
             showFormMsg(form, '\u2713 Check your inbox! We sent a confirmation link to ' + email + '.', 'success');
             emailInput.value = '';
           } else {
-            // API rejected — open Ghost Portal as fallback
-            ghostPortalFallback(form, email);
+            showFormMsg(form, result.data.error || 'Something went wrong. Please try again.', 'error');
           }
         })
         .catch(function () {
-          // CORS or network issue — open Ghost Portal as fallback
-          ghostPortalFallback(form, email);
+          showFormMsg(form, 'Could not connect. Please try again.', 'error');
         })
         .finally(function () {
           if (btn) { btn.textContent = origText; btn.disabled = false; }
         });
     });
   });
-
-  function ghostPortalFallback(form, email) {
-    // Open Ghost Portal signup in a new tab; tell the user to use the email they typed
-    window.open(GHOST + '/#/portal/signup', '_blank', 'noopener,noreferrer');
-    showFormMsg(form,
-      '\u2713 A signup page opened in a new tab. Enter ' + email + ' there to subscribe.',
-      'success');
-  }
 
   function showFormMsg(form, msg, type) {
     var existing = form.parentNode.querySelector('.form-feedback');
