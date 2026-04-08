@@ -212,7 +212,7 @@
         .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
         .then(function (result) {
           if (result.ok && result.data.success) {
-            showFormMsg(form, '\u2713 Check your inbox! We sent a confirmation link to ' + email + '.', 'success');
+            showFormMsg(form, "\u2713 You're subscribed! Check " + email + " for a welcome email from Ghost.", 'success');
             emailInput.value = '';
           } else {
             showFormMsg(form, result.data.error || 'Something went wrong. Please try again.', 'error');

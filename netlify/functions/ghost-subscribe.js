@@ -80,7 +80,7 @@ exports.handler = async function (event) {
     // Create the member — Ghost will send them a welcome/confirmation email
     const { status, body } = await adminPost(
       '/ghost/api/admin/members/',
-      { members: [{ email, subscribed: true }] },
+      { members: [{ email, subscribed: true, send_email: true, email_type: 'signup' }] },
       token
     );
 
