@@ -1,9 +1,44 @@
 // Netlify Function: ghost-subscribe
-// Proxies email signups to Ghost's members API server-to-server,
-// bypassing the CORS restriction that blocks browser → Ghost requests.
+// Proxies email signups to Ghost server-to-server (no browser CORS).
+// Spoofs Origin so Ghost treats it as a same-site request.
+
+const https = require('https');
+
+function ghostPost(email) {
+  return new Promise((resolve, reject) => {
+    const payload = JSON.stringify({
+      email,
+      emailType: 'subscribe',
+      requestSrc: 'subscribe-form',
+    });
+
+    const options = {
+      hostname: 'connected-circles.ghost.io',
+      path: '/members/api/send-magic-link/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+        'Accept': 'application/json',
+        'Origin': 'https://connected-circles.ghost.io',
+        'Referer': 'https://connected-circles.ghost.io/',
+        'ghost-members-api-version': 'v3',
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let body = '';
+      res.on('data', (chunk) => { body += chunk; });
+      res.on('end', () => resolve({ status: res.statusCode, body }));
+    });
+
+    req.on('error', reject);
+    req.write(payload);
+    req.end();
+  });
+}
 
 exports.handler = async function (event) {
-  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -21,13 +56,9 @@ exports.handler = async function (event) {
   }
 
   try {
-    const res = await fetch('https://connected-circles.ghost.io/members/api/send-magic-link/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ email, emailType: 'signup', requestSrc: 'subscribe-form' }),
-    });
+    const { status, body } = await ghostPost(email);
 
-    if (res.ok || res.status === 201) {
+    if (status === 201 || status === 200) {
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -35,21 +66,23 @@ exports.handler = async function (event) {
       };
     }
 
-    // Ghost returned an error — pass it through
+    // Parse Ghost's error message to return something useful
     let msg = 'Something went wrong. Please try again.';
     try {
-      const data = await res.json();
-      if (data && data.errors && data.errors[0] && data.errors[0].message) {
-        msg = data.errors[0].message;
-      }
-    } catch { /* ignore parse errors */ }
+      const data = JSON.parse(body);
+      if (data?.errors?.[0]?.message) msg = data.errors[0].message;
+    } catch { /* ignore */ }
+
+    // Log raw response so you can debug in Netlify function logs
+    console.error('Ghost API error', status, body);
 
     return {
-      statusCode: res.status,
+      statusCode: 400,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: msg }),
+      body: JSON.stringify({ error: msg, _debug: body }),
     };
   } catch (err) {
+    console.error('Ghost fetch failed', err);
     return {
       statusCode: 502,
       headers: { 'Content-Type': 'application/json' },
