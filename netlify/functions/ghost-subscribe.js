@@ -1,37 +1,42 @@
 // Netlify Function: ghost-subscribe
-// Proxies email signups to Ghost server-to-server (no browser CORS).
-// Spoofs Origin so Ghost treats it as a same-site request.
+// Uses Ghost Admin API (JWT auth) to create/subscribe a member.
+// Requires env var: GHOST_ADMIN_API_KEY  (format: keyId:keySecret)
+// Set it in Netlify → Site → Environment variables.
 
 const https = require('https');
+const crypto = require('crypto');
 
-function ghostPost(email) {
+function makeJwt(apiKey) {
+  const [id, secret] = apiKey.split(':');
+  const now = Math.floor(Date.now() / 1000);
+  const header  = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT', kid: id })).toString('base64url');
+  const payload = Buffer.from(JSON.stringify({ iat: now, exp: now + 300, aud: '/admin/' })).toString('base64url');
+  const sig = crypto
+    .createHmac('sha256', Buffer.from(secret, 'hex'))
+    .update(`${header}.${payload}`)
+    .digest('base64url');
+  return `${header}.${payload}.${sig}`;
+}
+
+function adminPost(path, body, token) {
   return new Promise((resolve, reject) => {
-    const payload = JSON.stringify({
-      email,
-      emailType: 'subscribe',
-      requestSrc: 'subscribe-form',
-    });
-
+    const payload = JSON.stringify(body);
     const options = {
       hostname: 'connected-circles.ghost.io',
-      path: '/members/api/send-magic-link/',
+      path,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(payload),
         'Accept': 'application/json',
-        'Origin': 'https://connected-circles.ghost.io',
-        'Referer': 'https://connected-circles.ghost.io/',
-        'ghost-members-api-version': 'v3',
+        'Authorization': `Ghost ${token}`,
       },
     };
-
     const req = https.request(options, (res) => {
-      let body = '';
-      res.on('data', (chunk) => { body += chunk; });
-      res.on('end', () => resolve({ status: res.statusCode, body }));
+      let data = '';
+      res.on('data', c => { data += c; });
+      res.on('end', () => resolve({ status: res.statusCode, body: data }));
     });
-
     req.on('error', reject);
     req.write(payload);
     req.end();
@@ -43,22 +48,43 @@ exports.handler = async function (event) {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
+  const apiKey = process.env.GHOST_ADMIN_API_KEY;
+  if (!apiKey || !apiKey.includes(':')) {
+    console.error('GHOST_ADMIN_API_KEY env var is not set or invalid');
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Subscription service is not configured. Please contact us directly.' }),
+    };
+  }
+
   let email;
   try {
     const body = JSON.parse(event.body || '{}');
     email = (body.email || '').trim().toLowerCase();
   } catch {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body.' }) };
+    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request.' }) };
   }
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Please enter a valid email address.' }) };
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Please enter a valid email address.' }),
+    };
   }
 
   try {
-    const { status, body } = await ghostPost(email);
+    const token = makeJwt(apiKey);
 
-    if (status === 201 || status === 200) {
+    // Create the member — Ghost will send them a welcome/confirmation email
+    const { status, body } = await adminPost(
+      '/ghost/api/admin/members/',
+      { members: [{ email, subscribed: true }] },
+      token
+    );
+
+    if (status === 201) {
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -66,23 +92,29 @@ exports.handler = async function (event) {
       };
     }
 
-    // Parse Ghost's error message to return something useful
+    // 422 = member already exists — treat as success
+    if (status === 422) {
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ success: true }),
+      };
+    }
+
     let msg = 'Something went wrong. Please try again.';
     try {
-      const data = JSON.parse(body);
-      if (data?.errors?.[0]?.message) msg = data.errors[0].message;
+      const d = JSON.parse(body);
+      if (d?.errors?.[0]?.message) msg = d.errors[0].message;
     } catch { /* ignore */ }
 
-    // Log raw response so you can debug in Netlify function logs
-    console.error('Ghost API error', status, body);
-
+    console.error('Ghost Admin API error', status, body);
     return {
       statusCode: 400,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: msg, _debug: body }),
+      body: JSON.stringify({ error: msg }),
     };
   } catch (err) {
-    console.error('Ghost fetch failed', err);
+    console.error('Ghost Admin API request failed', err);
     return {
       statusCode: 502,
       headers: { 'Content-Type': 'application/json' },

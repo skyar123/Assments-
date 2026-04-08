@@ -132,17 +132,13 @@ p:last-child { margin-bottom: 0; }
 }
 .nav-logo img {
   height: 90px; width: 90px;
-  animation: logo-spin 14s linear infinite;
   cursor: pointer;
   border-radius: 50%;
+  animation: logo-spin 2s linear infinite;
+  animation-play-state: paused;
 }
 .nav-logo:hover img {
-  animation-duration: 3s;
-}
-@keyframes logo-spin {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.15); }
-  100% { transform: rotate(360deg) scale(1); }
+  animation-play-state: running;
 }
 .nav-logo-text {
   font-family: var(--font-display); font-size: 1.15rem; font-weight: 600;
