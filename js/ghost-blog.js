@@ -202,12 +202,13 @@
           '<div class="subscribe-inline">' +
             '<h3>Get new posts in your inbox</h3>' +
             '<p>Clinical reflections, practical tools, and honest thinking from the ConnectEd Circles team.</p>' +
-            '<form action="https://connected-circles.ghost.io/subscribe" method="POST">' +
-              '<div class="subscribe-inline-form">' +
-                '<input type="email" name="email" required placeholder="your@email.com" aria-label="Email address">' +
-                '<button type="submit">Subscribe &rarr;</button>' +
-              '</div>' +
-            '</form>' +
+            '<div class="subscribe-inline-form" style="min-height:58px;">' +
+              '<script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.3/umd/signup-form.min.js" ' +
+                'data-button-color="#6b8e7f" ' +
+                'data-button-text-color="#ffffff" ' +
+                'data-site="https://connected-circles.ghost.io/" ' +
+                'data-locale="en" async></scr' + 'ipt>' +
+            '</div>' +
           '</div>';
       })
       .catch(function (err) {

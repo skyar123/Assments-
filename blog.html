@@ -157,12 +157,14 @@
         <span class="overline" style="color:var(--sage-300);">Join the Circle  -  Free</span>
         <h2>Become a Circle Member</h2>
         <p>Free subscribers get access to our full resource library: 25+ clinical guides, family handouts, and practitioner tools  -  delivered to your inbox. Plus monthly Field Notes and early access to trainings.</p>
-        <form action="https://connected-circles.ghost.io/subscribe" method="POST">
-          <div class="subscribe-form">
-            <input type="email" name="email" required placeholder="your@email.com" aria-label="Email address">
-            <button type="submit">Join Free &rarr;</button>
-          </div>
-        </form>
+        <div class="subscribe-form" style="min-height:58px;">
+          <script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.3/umd/signup-form.min.js"
+            data-button-color="#6b8e7f"
+            data-button-text-color="#ffffff"
+            data-site="https://connected-circles.ghost.io/"
+            data-locale="en"
+            async></script>
+        </div>
         <p class="subscribe-note">We never share your email. Unsubscribe any time. &nbsp;&bull;&nbsp; <a href="subscribe.html" style="color:var(--sage-300);">Dedicated subscribe page &rarr;</a></p>
       </div>
     </div>
