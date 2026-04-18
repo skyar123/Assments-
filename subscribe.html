@@ -29,10 +29,19 @@
     .get-item h4 { font-size:0.95rem; margin:0 0 8px; }
     .get-item p { font-size:0.85rem; color:var(--neutral-500); margin:0; line-height:1.55; }
   </style>
-  <meta property="og:image" content="https://www.connectedcirclescommunity.com/images/og-image.jpg">
+  <link rel="canonical" href="https://connectedcircles.netlify.app/subscribe.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ConnectEd Circles">
+  <meta property="og:title" content="Subscribe to Field Notes | ConnectEd Circles">
+  <meta property="og:description" content="Join the ConnectEd Circles mailing list. Get new Field Notes posts, clinical resources, and practitioner tools delivered to your inbox. Free to subscribe.">
+  <meta property="og:url" content="https://connectedcircles.netlify.app/subscribe.html">
+  <meta property="og:image" content="https://connectedcircles.netlify.app/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Subscribe to Field Notes | ConnectEd Circles">
+  <meta name="twitter:description" content="Join the ConnectEd Circles mailing list. Free to subscribe.">
+  <meta name="twitter:image" content="https://connectedcircles.netlify.app/images/og-image.jpg">
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -54,10 +63,14 @@
         <h2>Join the mailing list</h2>
         <p>Free to subscribe. We write about early childhood development, neurodiversity-affirming practice, attachment, and what it looks like to support children and families in WNC.</p>
 
-        <form class="ghost-form" action="https://connected-circles.ghost.io/subscribe" method="POST">
-          <input type="email" name="email" required placeholder="your@email.com" aria-label="Email address" autocomplete="email">
-          <button type="submit">Subscribe  -  it&rsquo;s free &rarr;</button>
-        </form>
+        <div style="min-height:58px;">
+          <script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.3/umd/signup-form.min.js"
+            data-button-color="#6b8e7f"
+            data-button-text-color="#ffffff"
+            data-site="https://connected-circles.ghost.io/"
+            data-locale="en"
+            async></script>
+        </div>
         <p class="ghost-note">We never share your email. Unsubscribe any time.</p>
       </div>
 

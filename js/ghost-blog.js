@@ -178,7 +178,7 @@
         if (authorImg || authorBio) {
           authorBox =
             '<div class="post-author">' +
-              (authorImg ? '<img src="' + authorImg + '" alt="' + author + '">' : '') +
+              (authorImg ? '<img src="' + authorImg + '" alt="' + author + '" loading="lazy" decoding="async">' : '') +
               '<div class="post-author-info">' +
                 '<strong>' + author + '</strong>' +
                 (authorBio ? '<span>' + authorBio + '</span>' : '') +
@@ -186,6 +186,9 @@
             '</div>';
         }
 
+        var postHtml = post.html || '';
+        // Ghost's rendered HTML doesn't include loading="lazy" — add it so below-the-fold images don't block first paint.
+        postHtml = postHtml.replace(/<img\b(?![^>]*\bloading=)/gi, '<img loading="lazy" decoding="async"');
         container.innerHTML =
           '<a href="../blog.html" class="back-link"><span style="font-size:1rem;">&larr;</span> Back to Field Notes</a>' +
           '<div class="post-header">' +
@@ -194,17 +197,18 @@
             (post.custom_excerpt ? '<p class="post-lede">' + post.custom_excerpt + '</p>' : '') +
           '</div>' +
           '<hr class="post-divider">' +
-          '<div class="ghost-content">' + post.html + '</div>' +
+          '<div class="ghost-content">' + postHtml + '</div>' +
           authorBox +
           '<div class="subscribe-inline">' +
             '<h3>Get new posts in your inbox</h3>' +
             '<p>Clinical reflections, practical tools, and honest thinking from the ConnectEd Circles team.</p>' +
-            '<form action="https://connected-circles.ghost.io/subscribe" method="POST">' +
-              '<div class="subscribe-inline-form">' +
-                '<input type="email" name="email" required placeholder="your@email.com" aria-label="Email address">' +
-                '<button type="submit">Subscribe &rarr;</button>' +
-              '</div>' +
-            '</form>' +
+            '<div class="subscribe-inline-form" style="min-height:58px;">' +
+              '<script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.3/umd/signup-form.min.js" ' +
+                'data-button-color="#6b8e7f" ' +
+                'data-button-text-color="#ffffff" ' +
+                'data-site="https://connected-circles.ghost.io/" ' +
+                'data-locale="en" async></scr' + 'ipt>' +
+            '</div>' +
           '</div>';
       })
       .catch(function (err) {
