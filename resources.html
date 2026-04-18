@@ -7,7 +7,23 @@
   <meta name="description" content="Free guides, articles, and trusted resources for early childhood educators and families from ConnectEd Circles.">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
-  
+  <style>
+    .anchor-nav { position:sticky; top:var(--nav-h); z-index:40; background:rgba(255,255,255,0.96); backdrop-filter:blur(8px); border-bottom:1px solid var(--neutral-200); }
+    .anchor-nav-inner { display:flex; gap:4px; overflow-x:auto; padding:10px 0; scrollbar-width:none; }
+    .anchor-nav-inner::-webkit-scrollbar { display:none; }
+    .anchor-nav a { flex-shrink:0; padding:8px 14px; font-size:0.82rem; font-weight:700; color:var(--neutral-600); text-decoration:none; border-radius:9999px; letter-spacing:0.02em; transition:all var(--dur) var(--ease); white-space:nowrap; }
+    .anchor-nav a:hover { background:var(--sage-50); color:var(--sage-800); }
+    .anchor-nav a.is-current { background:var(--sage-100); color:var(--sage-800); }
+    .philosophy-note { background:var(--sage-50); border-left:4px solid var(--sage-400); border-radius:0 var(--r-md) var(--r-md) 0; padding:20px 24px; max-width:780px; margin:32px auto 0; }
+    .philosophy-note h3 { font-size:1.05rem; margin:0 0 8px; color:var(--sage-800); }
+    .philosophy-note p { font-size:0.92rem; color:var(--neutral-600); margin:0 0 8px; line-height:1.65; }
+    .philosophy-note p:last-child { margin-bottom:0; }
+    .sub-anchor-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .sub-anchor-row a { font-size:0.78rem; font-weight:700; padding:6px 12px; border-radius:9999px; text-decoration:none; background:var(--neutral-100); color:var(--neutral-600); transition:all var(--dur) var(--ease); }
+    .sub-anchor-row a:hover { background:var(--sage-100); color:var(--sage-800); }
+    html { scroll-behavior:smooth; scroll-padding-top:calc(var(--nav-h) + 56px); }
+    @media (max-width:640px) { .anchor-nav a { padding:7px 12px; font-size:0.78rem; } }
+  </style>
   <meta property="og:image" content="https://www.connectedcirclescommunity.com/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -15,18 +31,39 @@
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
-  <nav class="nav" role="navigation" aria-label="Main"><div class="nav-inner"><a href="index.html" class="nav-logo"><img src="images/logo-icon.svg" alt="ConnectEd Circles logo"><span class="nav-logo-text">Connect<span>Ed</span> Circles</span></a><button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button><ul class="nav-links"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="services.html">Services</a></li><li><a href="resources.html" class="active">Resources</a></li><li><a href="blog.html">Field Notes</a></li><li><a href="es/index.html" class="nav-lang">Español</a></li><li><a href="contact.html" class="btn btn-nav-cta">Book a Consultation</a></li></ul></div></nav>
+  <nav class="nav" role="navigation" aria-label="Main"><div class="nav-inner"><a href="index.html" class="nav-logo"><img src="images/logo-icon.svg" alt="ConnectEd Circles logo"><span class="nav-logo-text">Connect<span>Ed</span> Circles</span></a><button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button><ul class="nav-links"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="services.html">Services</a></li><li><a href="resources.html" class="active">Resources</a></li><li><a href="blog.html">Field Notes</a></li><li><a href="community.html">Community</a></li><li><a href="es/index.html" class="nav-lang">Español</a></li><li><a href="contact.html" class="btn btn-nav-cta">Book a Consultation</a></li></ul></div></nav>
 
   <section class="page-hero" id="main-content">
     <div class="container">
       <span class="overline">Learn With Us</span>
       <h1>Resources</h1>
       <p>Guides, articles, and tools for educators, families, and anyone who cares about young children.</p>
+      <div class="philosophy-note">
+        <h3>A note on how we share</h3>
+        <p>You won&rsquo;t find a generic download button here. Every resource we&rsquo;ve developed is shared in conversation - sometimes a quick email, sometimes a call - because context matters, and a handout without a person behind it is rarely the thing you actually need.</p>
+        <p>This isn&rsquo;t a gate. It&rsquo;s a pace. Browse what&rsquo;s below, and when something lands, <a href="contact.html" style="color:var(--sage-700);font-weight:700;">reach out</a> and we&rsquo;ll send the version that fits your situation.</p>
+      </div>
     </div>
   </section>
 
-  <section class="section">
+  <nav class="anchor-nav" aria-label="Resources sections">
     <div class="container">
+      <div class="anchor-nav-inner">
+        <a href="#start-here">Start Here</a>
+        <a href="#frameworks">Our Frameworks</a>
+        <a href="#library">The Library</a>
+        <a href="#trusted">Trusted Partners</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" id="start-here">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:32px;">
+        <span class="overline">Start Here</span>
+        <h2>Six plain-language primers</h2>
+        <p>If you&rsquo;re new to our work, begin with these. They&rsquo;re short, jargon-light, and designed to meet you where you are.</p>
+      </div>
       <div class="grid-3">
         <div class="resource-card anim">
           <div class="resource-thumb" style="background:var(--sage-100);"></div>
@@ -86,11 +123,20 @@
     </div>
   </section>
 
-  <!-- BEARS Framework -->
-  <section class="section section-sage">
+  <!-- Our Frameworks: BEARS, Web of Possibilities, COSP -->
+  <section class="section section-sage" id="frameworks">
     <div class="container">
-      <div class="section-header">
-        <span class="overline">Proprietary Tools</span>
+      <div class="section-header" style="margin-bottom:24px;">
+        <span class="overline">Our Frameworks</span>
+        <h2>Three proprietary approaches</h2>
+        <p>Tools and methodologies we&rsquo;ve built over 20+ years of practice. Each is introduced below; the full versions are shared in consultation.</p>
+      </div>
+      <div class="sub-anchor-row" style="justify-content:center;margin-bottom:40px;">
+        <a href="#frameworks-bears">BEARS</a>
+        <a href="#frameworks-web">Web of Possibilities</a>
+        <a href="#frameworks-cosp">Circle of Security Parenting</a>
+      </div>
+      <div class="section-header" id="frameworks-bears" style="margin-top:20px;">
         <h2>The BEARS Framework</h2>
         <p>A relationship-based, play-centered methodology developed by ConnectEd Circles to cultivate emotional resilience, psychological safety, and community connection in early childhood environments.</p>
       </div>
@@ -148,7 +194,7 @@
   </section>
 
   <!-- Web of Possibilities -->
-  <section class="section section-white">
+  <section class="section section-white" id="frameworks-web">
     <div class="container" style="max-width:860px;">
       <div class="section-header">
         <span class="overline">Curriculum Design</span>
@@ -180,7 +226,7 @@
   </section>
 
   <!-- Circle of Security Parenting Assets -->
-  <section class="section section-sage">
+  <section class="section section-sage" id="frameworks-cosp">
     <div class="container">
       <div class="section-header">
         <span class="overline">Family Support</span>
@@ -224,16 +270,21 @@
   </section>
 
   <!-- Resource Library -->
-  <section class="section">
+  <section class="section" id="library">
     <div class="container">
       <div class="section-header">
-        <span class="overline">Resource Library</span>
+        <span class="overline">The Library</span>
         <h2>Handouts, guides &amp; practitioner tools</h2>
-        <p>ConnectEd Circles has developed an extensive library of clinical handouts, family guides, and practitioner tools. Resources are available through inquiry - we&rsquo;ll share the right materials based on your specific context and needs.</p>
+        <p>Clinical handouts, family guides, and practitioner tools built over years of direct work. Resources are shared in context - so jump to your part of the library, find what speaks, then reach out.</p>
+      </div>
+      <div class="sub-anchor-row" style="justify-content:center;margin-bottom:36px;">
+        <a href="#library-families">For Families</a>
+        <a href="#library-educators">For Educators &amp; Coaches</a>
+        <a href="#library-programs">For Programs &amp; Administrators</a>
       </div>
 
       <!-- For Families -->
-      <div style="margin-bottom:40px;">
+      <div id="library-families" style="margin-bottom:40px;">
         <h3 style="font-size:1rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--terra-600);margin-bottom:16px;">For Families</h3>
         <div class="grid-3">
           <div class="card anim" style="border-top:3px solid var(--terra-300);">
@@ -312,7 +363,7 @@
       </div>
 
       <!-- For Educators -->
-      <div style="margin-bottom:40px;">
+      <div id="library-educators" style="margin-bottom:40px;">
         <h3 style="font-size:1rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--sage-700);margin-bottom:16px;">For Educators &amp; Coaches</h3>
         <div class="grid-3">
           <div class="card anim" style="border-top:3px solid var(--sage-300);">
@@ -379,7 +430,7 @@
       </div>
 
       <!-- For Programs & Administrators -->
-      <div style="margin-bottom:40px;">
+      <div id="library-programs" style="margin-bottom:40px;">
         <h3 style="font-size:1rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--lav-600);margin-bottom:16px;">For Programs &amp; Administrators</h3>
         <div class="grid-3">
           <div class="card anim" style="border-top:3px solid var(--lav-300);">
@@ -404,10 +455,10 @@
     </div>
   </section>
 
-  <section class="section section-white">
+  <section class="section section-white" id="trusted">
     <div class="container" style="max-width:780px;">
       <div class="section-header">
-        <span class="overline">Recommended</span>
+        <span class="overline">Trusted Partners</span>
         <h2>Resources we trust</h2>
         <p>Organizations and tools we regularly recommend to families and educators.</p>
       </div>
