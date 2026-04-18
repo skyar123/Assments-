@@ -77,10 +77,11 @@ exports.handler = async function (event) {
   try {
     const token = makeJwt(apiKey);
 
-    // Create the member — Ghost will send them a welcome/confirmation email
+    // Create the member — Ghost will send them a welcome/confirmation email.
+    // NOTE: send_email and email_type MUST be query params — Ghost ignores them in the body.
     const { status, body } = await adminPost(
-      '/ghost/api/admin/members/',
-      { members: [{ email, subscribed: true, send_email: true, email_type: 'signup' }] },
+      '/ghost/api/admin/members/?send_email=true&email_type=signup',
+      { members: [{ email, subscribed: true }] },
       token
     );
 
