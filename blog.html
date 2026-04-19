@@ -8,32 +8,18 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <style>
-    .post-card { background:var(--white); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); overflow:hidden; transition:all var(--dur) var(--ease); display:flex; flex-direction:column; }
-    .post-card:hover { box-shadow:var(--shadow-md); transform:translateY(-3px); }
-    .post-thumb { height:160px; background:var(--sage-100); flex-shrink:0; overflow:hidden; }
-    .post-thumb img { width:100%; height:100%; object-fit:cover; }
-    .post-thumb.pt-terra { background:var(--terra-100); }
-    .post-thumb.pt-lav { background:var(--lav-100); }
-    .post-body { padding:24px; flex:1; display:flex; flex-direction:column; }
-    .post-meta { font-size:0.78rem; color:var(--neutral-400); font-weight:600; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:8px; }
-    .post-body h3 { font-size:1.05rem; margin:0 0 10px; line-height:1.35; }
-    .post-body p { font-size:0.88rem; color:var(--neutral-500); flex:1; margin:0 0 16px; }
-    .post-body a.read-link { font-size:0.85rem; font-weight:700; color:var(--sage-700); text-decoration:none; }
-    .post-body a.read-link:hover { color:var(--sage-900); }
-    .post-access { display:inline-block; font-size:0.68rem; font-weight:800; letter-spacing:0.07em; text-transform:uppercase; border-radius:9999px; padding:3px 10px; margin-bottom:10px; }
-    .post-access.pa-free { background:var(--sage-100); color:var(--sage-700); }
-    .post-access.pa-member { background:var(--terra-100); color:var(--terra-700); }
+    .substack-frame-wrap { background:var(--white); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.06); overflow:hidden; max-width:960px; margin:0 auto; }
+    .substack-frame-wrap iframe { display:block; width:100%; height:1400px; border:none; background:var(--white); }
+    .frame-bar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; max-width:960px; margin:0 auto 16px; padding:0 4px; font-size:0.88rem; color:var(--neutral-500); }
+    .frame-bar a { color:var(--sage-700); text-decoration:none; font-weight:600; }
+    .frame-bar a:hover { color:var(--sage-900); }
     .subscribe-box { background:var(--sage-800); color:var(--white); border-radius:var(--r-xl); padding:56px 48px; text-align:center; }
     .subscribe-box h2 { color:var(--white); margin-bottom:12px; }
     .subscribe-box p { color:var(--sage-200); max-width:520px; margin:0 auto 32px; }
-    .subscribe-form { display:flex; gap:12px; max-width:480px; margin:0 auto; }
-    .subscribe-form input { flex:1; padding:14px 18px; border-radius:var(--r-md); border:none; font-size:0.95rem; background:rgba(255,255,255,0.12); color:var(--white); outline:none; }
-    .subscribe-form input::placeholder { color:rgba(255,255,255,0.5); }
-    .subscribe-form input:focus { background:rgba(255,255,255,0.2); }
-    .subscribe-form button { padding:14px 24px; border-radius:var(--r-md); border:none; background:var(--terra-500); color:var(--white); font-size:0.9rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:background var(--dur) var(--ease); }
-    .subscribe-form button:hover { background:var(--terra-600); }
+    .substack-embed-wrap { background:var(--white); border-radius:var(--r-md); padding:0; max-width:480px; margin:0 auto; overflow:hidden; }
+    .substack-embed-wrap iframe { display:block; width:100%; border:none; }
     .subscribe-note { font-size:0.78rem; color:var(--sage-300); margin-top:16px; }
-    @media (max-width:600px) { .subscribe-box { padding:40px 24px; } .subscribe-form { flex-direction:column; } .subscribe-form button { width:100%; } }
+    @media (max-width:600px) { .subscribe-box { padding:40px 24px; } .substack-frame-wrap iframe { height:1800px; } }
   </style>
   <link rel="canonical" href="https://connectedcircles.netlify.app/blog.html">
   <meta property="og:type" content="website">
@@ -62,86 +48,18 @@
     </div>
   </section>
 
-  <!-- Posts grid — dynamically loaded from Ghost -->
+  <!-- Embedded Substack publication -->
   <section class="section">
     <div class="container">
-      <div class="section-header">
-        <span class="overline">Latest</span>
-        <h2>Recent posts</h2>
+      <div class="frame-bar">
+        <span>Browse posts below &mdash; or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
+        <a href="https://connectedcircles.substack.com/feed" target="_blank" rel="noopener">RSS feed</a>
       </div>
-      <div class="grid-3" id="ghost-posts">
-        <div class="post-card" style="opacity:0.5;text-align:center;padding:60px 24px;grid-column:1/-1;">
-          <p style="color:var(--neutral-400);">Loading posts...</p>
-        </div>
+      <div class="substack-frame-wrap anim">
+        <iframe src="https://connectedcircles.substack.com/" title="Field Notes on Substack" loading="lazy"></iframe>
       </div>
-
     </div>
   </section>
-
-  <script>
-  (function () {
-    var API = 'https://connected-circles.ghost.io/ghost/api/content/posts/';
-    var KEY = '173c2ca8bce5d07e1c0d5998a2';
-    var grid = document.getElementById('ghost-posts');
-
-    fetch(API + '?key=' + KEY + '&limit=12&include=tags,authors&fields=title,custom_excerpt,excerpt,url,published_at,feature_image,visibility&include=authors,tags')
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        if (!data.posts || !data.posts.length) {
-          grid.innerHTML = '<div style="text-align:center;padding:60px 24px;grid-column:1/-1;"><p style="color:var(--neutral-500);">No posts yet. Check back soon!</p></div>';
-          return;
-        }
-        grid.innerHTML = '';
-        var delays = ['', ' anim-d1', ' anim-d2'];
-        data.posts.forEach(function (post, i) {
-          var date = new Date(post.published_at);
-          var month = date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-          var author = post.authors && post.authors[0] ? post.authors[0].name : 'ConnectEd Circles';
-          var tag = post.tags && post.tags[0] ? post.tags[0].name : '';
-          var excerpt = post.custom_excerpt || post.excerpt || '';
-          if (excerpt.length > 180) excerpt = excerpt.substring(0, 177) + '...';
-          var isFree = post.visibility === 'public';
-          var thumb = post.feature_image
-            ? '<div class="post-thumb"><img src="' + post.feature_image + '" alt="' + post.title.replace(/"/g, '&quot;') + '" loading="lazy"></div>'
-            : '<div class="post-thumb"></div>';
-          var accessClass = isFree ? 'pa-free' : 'pa-member';
-          var accessLabel = isFree ? 'Free' : 'Members';
-
-          var card = document.createElement('div');
-          card.className = 'post-card anim' + delays[i % 3];
-          card.innerHTML = thumb +
-            '<div class="post-body">' +
-              '<span class="post-access ' + accessClass + '">' + accessLabel + '</span>' +
-              (tag ? '<span class="post-access" style="background:var(--neutral-100);color:var(--neutral-500);margin-left:6px;">' + tag + '</span>' : '') +
-              '<div class="post-meta">' + author + ' &middot; ' + month + '</div>' +
-              '<h3>' + post.title + '</h3>' +
-              '<p>' + excerpt + '</p>' +
-              '<a href="' + post.url + '" class="read-link">Read on Field Notes <span class="arrow">&rarr;</span></a>' +
-            '</div>';
-          grid.appendChild(card);
-        });
-
-        // trigger scroll animations for the new cards
-        if ('IntersectionObserver' in window) {
-          var observer = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-          }, { threshold: 0.1 });
-          grid.querySelectorAll('.anim').forEach(function (el) {
-            var r = el.getBoundingClientRect();
-            if (r.top < window.innerHeight) el.classList.add('visible');
-            else observer.observe(el);
-          });
-        } else {
-          grid.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
-        }
-      })
-      .catch(function () {
-        grid.innerHTML = '<div style="text-align:center;padding:60px 24px;grid-column:1/-1;">' +
-          '<p style="color:var(--neutral-500);margin-bottom:16px;">Could not load posts right now.</p>' +
-          '<a href="https://connected-circles.ghost.io" class="btn btn-outline" target="_blank" rel="noopener">Visit Field Notes directly &rarr;</a></div>';
-      });
-  })();
-  </script>
 
   <!-- Mailing List -->
   <section class="section">
@@ -149,16 +67,11 @@
       <div class="subscribe-box anim">
         <span class="overline" style="color:var(--sage-300);">Join the Circle  -  Free</span>
         <h2>Become a Circle Member</h2>
-        <p>Free subscribers get access to our full resource library: 25+ clinical guides, family handouts, and practitioner tools  -  delivered to your inbox. Plus monthly Field Notes and early access to trainings.</p>
-        <div class="subscribe-form" style="min-height:58px;">
-          <script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.3/umd/signup-form.min.js"
-            data-button-color="#6b8e7f"
-            data-button-text-color="#ffffff"
-            data-site="https://connected-circles.ghost.io/"
-            data-locale="en"
-            async></script>
+        <p>Free subscribers get access to our full resource library: clinical guides, family handouts, and practitioner tools  -  delivered to your inbox. Plus monthly Field Notes and early access to trainings.</p>
+        <div class="substack-embed-wrap">
+          <iframe src="https://connectedcircles.substack.com/embed" width="480" height="320" style="background:white;" frameborder="0" scrolling="no"></iframe>
         </div>
-        <p class="subscribe-note">We never share your email. Unsubscribe any time. &nbsp;&bull;&nbsp; <a href="subscribe.html" style="color:var(--sage-300);">Dedicated subscribe page &rarr;</a></p>
+        <p class="subscribe-note">Hosted free on Substack. Unsubscribe any time. &nbsp;&bull;&nbsp; <a href="subscribe.html" style="color:var(--sage-300);">Dedicated subscribe page &rarr;</a></p>
       </div>
     </div>
   </section>
@@ -221,6 +134,5 @@
 
   <footer class="footer"><div class="container"><div class="footer-grid"><div><div class="footer-brand">Connect<span>Ed</span> Circles</div><p class="footer-desc">Reflective coaching, professional development, and family support grounded in relationships.</p></div><div><h4>Navigate</h4><ul class="footer-links"><li><a href="about.html">About Us</a></li><li><a href="team.html">Meet the Team</a></li><li><a href="blog.html">Field Notes Blog</a></li><li><a href="community.html">Join the Circle</a></li><li><a href="contact.html">Contact Us</a></li></ul></div><div><h4>Explore</h4><ul class="footer-links"><li><a href="workshops.html">Workshops</a></li><li><a href="services.html">Services</a></li><li><a href="frameworks.html">Our Frameworks</a></li><li><a href="training.html">Autism Training</a></li><li><a href="directory.html">WNC Directory</a></li><li><a href="es/index.html">Español</a></li></ul></div><div><h4>Connect</h4><ul class="footer-links"><li><a href="https://www.instagram.com/connectedcirclescommunity" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:info@connectedcirclescommunity.com">Email Us</a></li><li><a href="blog.html">Field Notes Blog</a></li></ul></div></div><div class="footer-bottom"><p>&copy; 2026 ConnectEd Circles, LLC.</p><p>Asheville, NC</p></div></div></footer>
   <script src="js/main.js"></script>
-  <script src="js/ghost-blog.js"></script>
 </body>
 </html>

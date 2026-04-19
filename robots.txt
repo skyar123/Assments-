@@ -1,8 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /blog/ghost-post.html
-Disallow: /ghost-subscribe-embed.html
-Disallow: /ghost-code-injection.html
 Disallow: /.netlify/
 
 Sitemap: https://connectedcircles.netlify.app/sitemap.xml
