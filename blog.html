@@ -8,18 +8,28 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <style>
-    .substack-frame-wrap { background:var(--white); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.06); overflow:hidden; max-width:960px; margin:0 auto; }
-    .substack-frame-wrap iframe { display:block; width:100%; height:1400px; border:none; background:var(--white); }
-    .frame-bar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; max-width:960px; margin:0 auto 16px; padding:0 4px; font-size:0.88rem; color:var(--neutral-500); }
+    .post-card { background:var(--white); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); overflow:hidden; transition:all var(--dur) var(--ease); display:flex; flex-direction:column; text-decoration:none; color:inherit; }
+    .post-card:hover { box-shadow:var(--shadow-md); transform:translateY(-3px); }
+    .post-thumb { height:180px; background:var(--sage-100); flex-shrink:0; overflow:hidden; }
+    .post-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .post-body { padding:22px 24px 24px; flex:1; display:flex; flex-direction:column; }
+    .post-meta { font-size:0.75rem; color:var(--neutral-400); font-weight:600; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:10px; }
+    .post-body h3 { font-size:1.05rem; margin:0 0 10px; line-height:1.35; color:var(--neutral-800); }
+    .post-body p { font-size:0.88rem; color:var(--neutral-500); flex:1; margin:0 0 16px; }
+    .post-body .read-link { font-size:0.85rem; font-weight:700; color:var(--sage-700); }
+    .post-card:hover .read-link { color:var(--sage-900); }
+    .frame-bar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin:0 0 24px; font-size:0.88rem; color:var(--neutral-500); }
     .frame-bar a { color:var(--sage-700); text-decoration:none; font-weight:600; }
     .frame-bar a:hover { color:var(--sage-900); }
+    .posts-state { grid-column:1/-1; text-align:center; padding:60px 24px; color:var(--neutral-500); }
+    .posts-state .btn { margin-top:16px; }
     .subscribe-box { background:var(--sage-800); color:var(--white); border-radius:var(--r-xl); padding:56px 48px; text-align:center; }
     .subscribe-box h2 { color:var(--white); margin-bottom:12px; }
     .subscribe-box p { color:var(--sage-200); max-width:520px; margin:0 auto 32px; }
     .substack-embed-wrap { background:var(--white); border-radius:var(--r-md); padding:0; max-width:480px; margin:0 auto; overflow:hidden; }
     .substack-embed-wrap iframe { display:block; width:100%; border:none; }
     .subscribe-note { font-size:0.78rem; color:var(--sage-300); margin-top:16px; }
-    @media (max-width:600px) { .subscribe-box { padding:40px 24px; } .substack-frame-wrap iframe { height:1800px; } }
+    @media (max-width:600px) { .subscribe-box { padding:40px 24px; } }
   </style>
   <link rel="canonical" href="https://connectedcircles.netlify.app/blog.html">
   <meta property="og:type" content="website">
@@ -48,18 +58,96 @@
     </div>
   </section>
 
-  <!-- Embedded Substack publication -->
+  <!-- Substack posts (fetched from RSS) -->
   <section class="section">
     <div class="container">
       <div class="frame-bar">
-        <span>Browse posts below &mdash; or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
+        <span>Recent posts &mdash; read here or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
         <a href="https://connectedcircles.substack.com/feed" target="_blank" rel="noopener">RSS feed</a>
       </div>
-      <div class="substack-frame-wrap anim">
-        <iframe src="https://connectedcircles.substack.com/" title="Field Notes on Substack" loading="lazy"></iframe>
+      <div class="grid-3" id="substack-posts">
+        <div class="posts-state">Loading posts&hellip;</div>
       </div>
     </div>
   </section>
+
+  <script>
+  (function () {
+    var grid = document.getElementById('substack-posts');
+    var FEED = 'https://connectedcircles.substack.com/feed';
+    var API = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEED);
+
+    function escapeHtml(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c]; }); }
+
+    function stripHtml(s) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = s || '';
+      return tmp.textContent || tmp.innerText || '';
+    }
+
+    function extractImage(html, fallback) {
+      if (!html) return fallback;
+      var m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+      return m ? m[1] : fallback;
+    }
+
+    function renderFallback() {
+      grid.innerHTML = '<div class="posts-state">' +
+        '<p>We couldn&rsquo;t load recent posts right now. Read Field Notes directly on Substack.</p>' +
+        '<a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener" class="btn btn-primary">Open Field Notes <span class="arrow">&rarr;</span></a>' +
+      '</div>';
+    }
+
+    fetch(API)
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (data) {
+        if (!data || data.status !== 'ok' || !data.items || !data.items.length) {
+          renderFallback();
+          return;
+        }
+        grid.innerHTML = '';
+        data.items.slice(0, 12).forEach(function (item, i) {
+          var date = new Date(item.pubDate);
+          var month = date.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+          var excerpt = stripHtml(item.description).trim();
+          if (excerpt.length > 180) excerpt = excerpt.substring(0, 177) + '…';
+          var enc = (item.enclosure && item.enclosure.link) ? item.enclosure.link : '';
+          var img = item.thumbnail || extractImage(item.content || item.description, '') || enc;
+          var thumb = img
+            ? '<div class="post-thumb"><img src="' + escapeHtml(img) + '" alt="" loading="lazy"></div>'
+            : '';
+          var delay = i % 3 === 1 ? ' anim-d1' : i % 3 === 2 ? ' anim-d2' : '';
+          var card = document.createElement('a');
+          card.className = 'post-card anim' + delay;
+          card.href = item.link;
+          card.target = '_blank';
+          card.rel = 'noopener';
+          card.innerHTML = thumb +
+            '<div class="post-body">' +
+              '<div class="post-meta">' + month + '</div>' +
+              '<h3>' + escapeHtml(item.title) + '</h3>' +
+              '<p>' + escapeHtml(excerpt) + '</p>' +
+              '<span class="read-link">Read on Substack <span class="arrow">&rarr;</span></span>' +
+            '</div>';
+          grid.appendChild(card);
+        });
+
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+          }, { threshold: 0.1 });
+          grid.querySelectorAll('.anim').forEach(function (el) {
+            var r = el.getBoundingClientRect();
+            if (r.top < window.innerHeight) el.classList.add('visible');
+            else observer.observe(el);
+          });
+        } else {
+          grid.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
+        }
+      })
+      .catch(renderFallback);
+  })();
+  </script>
 
   <!-- Mailing List -->
   <section class="section">

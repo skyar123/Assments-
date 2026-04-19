@@ -460,7 +460,8 @@ p:last-child { margin-bottom: 0; }
   padding:0 28px;
 }
 .accordion-item.open .accordion-body { max-height:2000px; padding:0 28px 24px; }
-.accordion-body p { color:var(--neutral-600); font-size:0.93rem; }
+.accordion-body p { color:var(--neutral-600); font-size:0.93rem; margin:0 0 1rem; }
+.accordion-body p:last-child { margin-bottom:0; }
 .framework-badge {
   display:inline-block; font-size:0.68rem; font-weight:700; letter-spacing:0.06em;
   text-transform:uppercase; padding:3px 10px; border-radius:var(--r-full); margin-bottom:10px;
