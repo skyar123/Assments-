@@ -30,6 +30,20 @@
     .substack-embed-wrap iframe { display:block; width:100%; border:none; }
     .subscribe-note { font-size:0.78rem; color:var(--sage-300); margin-top:16px; }
     @media (max-width:600px) { .subscribe-box { padding:40px 24px; } }
+    .resources-callout { display:flex; align-items:center; justify-content:space-between; gap:24px; background:#2d4a32; color:#fefdfb; border-radius:var(--r-lg); padding:28px 32px; margin:0 0 40px; position:relative; overflow:hidden; }
+    .resources-callout .rc-stripe { position:absolute; left:0; top:0; bottom:0; width:6px; display:flex; flex-direction:column; }
+    .resources-callout .rc-stripe span { flex:1; }
+    .resources-callout .rc-stripe .s-terra { background:var(--terra-500); }
+    .resources-callout .rc-stripe .s-sage { background:var(--sage-500); }
+    .resources-callout .rc-stripe .s-lav { background:var(--lav-500); }
+    .resources-callout .rc-text { flex:1; min-width:0; padding-left:12px; }
+    .resources-callout .rc-label { font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--terra-400); margin-bottom:6px; font-weight:700; }
+    .resources-callout .rc-text h3 { color:#fefdfb; font-size:1.2rem; margin:0 0 6px; line-height:1.3; }
+    .resources-callout .rc-text h3 em { font-style:italic; color:#c9d7cb; font-weight:400; }
+    .resources-callout .rc-text p { color:rgba(254,253,251,0.78); font-size:0.9rem; margin:0; }
+    .resources-callout .rc-btn { flex-shrink:0; background:var(--terra-500); color:#fff; padding:12px 22px; border-radius:999px; text-decoration:none; font-weight:700; font-size:0.88rem; transition:all var(--dur) var(--ease); white-space:nowrap; }
+    .resources-callout .rc-btn:hover { background:var(--terra-600); transform:translateY(-1px); }
+    @media (max-width:720px) { .resources-callout { flex-direction:column; align-items:flex-start; padding:24px 24px 24px 32px; } .resources-callout .rc-btn { align-self:stretch; text-align:center; } }
   </style>
   <link rel="canonical" href="https://connectedcircles.netlify.app/blog.html">
   <meta property="og:type" content="website">
@@ -48,7 +62,7 @@
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <nav class="nav" role="navigation" aria-label="Main"><div class="nav-inner"><a href="index.html" class="nav-logo"><img src="images/logo-icon.svg" alt="ConnectEd Circles logo"><span class="nav-logo-text">Connect<span>Ed</span> Circles</span></a><button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button><ul class="nav-links"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="services.html">Services</a></li><li><a href="blog.html" class="active">Field Notes</a></li><li><a href="subscribe.html">Subscribe</a></li><li><a href="es/index.html" class="nav-lang">Español</a></li><li><a href="contact.html" class="btn btn-nav-cta">Book a Consultation</a></li></ul></div></nav>
+  <nav class="nav" role="navigation" aria-label="Main"><div class="nav-inner"><a href="index.html" class="nav-logo"><img src="images/logo-icon.svg" alt="ConnectEd Circles logo"><span class="nav-logo-text">Connect<span>Ed</span> Circles</span></a><button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button><ul class="nav-links"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="services.html">Services</a></li><li><a href="blog.html" class="active">Field Notes</a></li><li><a href="resources.html">Resources</a></li><li><a href="subscribe.html">Subscribe</a></li><li><a href="es/index.html" class="nav-lang">Español</a></li><li><a href="contact.html" class="btn btn-nav-cta">Book a Consultation</a></li></ul></div></nav>
 
   <section class="page-hero" id="main-content">
     <div class="container">
@@ -61,6 +75,15 @@
   <!-- Substack posts (fetched from RSS) -->
   <section class="section">
     <div class="container">
+      <a href="resources.html" class="resources-callout anim" aria-label="Browse the full resource library and essays">
+        <span class="rc-stripe" aria-hidden="true"><span class="s-terra"></span><span class="s-sage"></span><span class="s-lav"></span></span>
+        <div class="rc-text">
+          <div class="rc-label">&mdash; Resource Library</div>
+          <h3>Essays, frameworks &amp; <em>practitioner tools</em></h3>
+          <p>Start-here reading, foundational essays, and downloadable guides curated for families and practitioners.</p>
+        </div>
+        <span class="rc-btn">Browse Resources &rarr;</span>
+      </a>
       <div class="frame-bar">
         <span>Recent posts &mdash; read here or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
         <a href="https://connectedcircles.substack.com/feed" target="_blank" rel="noopener">RSS feed</a>
