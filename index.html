@@ -84,7 +84,7 @@
           </div>
           <p style="font-size:0.82rem;color:var(--neutral-500);margin-top:12px;">Or <a href="blog.html" style="color:var(--sage-700);text-decoration:underline;text-underline-offset:3px;">read our Field Notes blog</a></p>
           <div class="anim anim-d3" style="margin-top:20px;max-width:480px;">
-            <iframe src="https://connectedcircles.substack.com/embed" width="480" height="150" style="width:100%;max-width:480px;background:white;border:1px solid var(--sage-200);border-radius:var(--r-md);" frameborder="0" scrolling="no" title="Subscribe to Field Notes"></iframe>
+            <iframe src="https://connectedcircles.substack.com/embed" width="480" height="150" style="width:100%;max-width:480px;background:white;border:1px solid var(--sage-200);border-radius:var(--r-md);" frameborder="0" scrolling="no" title="Subscribe to Field Notes" loading="lazy"></iframe>
           </div>
           <p style="font-size:0.75rem;color:var(--neutral-400);margin-top:8px;">Field Notes from our team, hosted free on Substack. Unsubscribe any time.</p>
         </div>
@@ -238,28 +238,52 @@
         <h2>Latest from the blog</h2>
         <p>Clinical reflections, practical tools, and honest thinking on early childhood development from our team.</p>
       </div>
-      <div class="grid-2">
-        <div class="card anim">
-          <div style="font-size:0.78rem;color:var(--neutral-400);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">Gabriel Guyton &nbsp;&middot;&nbsp; March 2026</div>
-          <h3 style="font-size:1.05rem;margin:0 0 10px;line-height:1.35;">Bridging Attachment, Trauma, and Neurodiversity in Early Childhood Clinical Practice</h3>
-          <p style="font-size:0.88rem;color:var(--neutral-500);margin:0 0 16px;flex:1;">How do we stay attuned to attachment needs, honor neurodivergent nervous systems, and hold trauma history in the same room?</p>
-          <a href="blog/attachment-trauma-neurodiversity.html" style="font-size:0.85rem;font-weight:700;color:var(--sage-700);text-decoration:none;">Read more <span class="arrow">&rarr;</span></a>
-        </div>
-        <div class="card anim anim-d1">
-          <div style="font-size:0.78rem;color:var(--neutral-400);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">Skylar Belt &nbsp;&middot;&nbsp; February 2026</div>
-          <h3 style="font-size:1.05rem;margin:0 0 10px;line-height:1.35;">After Helene: What Therapeutic Playgroups Taught Us About Community Resilience</h3>
-          <p style="font-size:0.88rem;color:var(--neutral-500);margin:0 0 16px;flex:1;">In the weeks after Hurricane Helene, we created play spaces in living rooms and community centers across Asheville.</p>
-          <a href="blog.html" style="font-size:0.85rem;font-weight:700;color:var(--sage-700);text-decoration:none;">Read more <span class="arrow">&rarr;</span></a>
-        </div>
+      <div class="grid-2" id="home-substack-posts">
+        <div class="card anim" style="grid-column:1/-1;text-align:center;color:var(--neutral-500);padding:40px 24px;">Loading recent posts&hellip;</div>
       </div>
       <div style="text-align:center;margin-top:24px;" class="anim">
         <a href="blog.html" class="btn btn-outline">All Field Notes <span class="arrow">&rarr;</span></a>
       </div>
+      <script>
+      (function () {
+        var grid = document.getElementById('home-substack-posts');
+        if (!grid) return;
+        var FEED = 'https://connectedcircles.substack.com/feed';
+        var API = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEED);
+        function escapeHtml(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c]; }); }
+        function stripHtml(s) { var t = document.createElement('div'); t.innerHTML = s || ''; return t.textContent || ''; }
+        function fallback() {
+          grid.innerHTML = '<div class="card anim" style="grid-column:1/-1;text-align:center;padding:32px 24px;">' +
+            '<p style="margin:0 0 14px;color:var(--neutral-500);">Field Notes is published on Substack. Head there to read the latest reflections from the team.</p>' +
+            '<a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener" class="btn btn-primary">Open Field Notes on Substack <span class="arrow">&rarr;</span></a></div>';
+        }
+        fetch(API).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (data) {
+          if (!data || data.status !== 'ok' || !data.items || !data.items.length) { fallback(); return; }
+          grid.innerHTML = '';
+          data.items.slice(0, 2).forEach(function (item, i) {
+            var d = new Date(item.pubDate);
+            var month = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+            var excerpt = stripHtml(item.description).trim();
+            if (excerpt.length > 160) excerpt = excerpt.substring(0, 157) + '…';
+            var card = document.createElement('a');
+            card.className = 'card anim' + (i === 1 ? ' anim-d1' : '');
+            card.href = item.link; card.target = '_blank'; card.rel = 'noopener';
+            card.style.textDecoration = 'none'; card.style.color = 'inherit'; card.style.display = 'flex'; card.style.flexDirection = 'column';
+            card.innerHTML =
+              '<div style="font-size:0.78rem;color:var(--neutral-400);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">' + escapeHtml(item.author || 'ConnectEd Circles') + ' &nbsp;&middot;&nbsp; ' + month + '</div>' +
+              '<h3 style="font-size:1.05rem;margin:0 0 10px;line-height:1.35;">' + escapeHtml(item.title) + '</h3>' +
+              '<p style="font-size:0.88rem;color:var(--neutral-500);margin:0 0 16px;flex:1;">' + escapeHtml(excerpt) + '</p>' +
+              '<span style="font-size:0.85rem;font-weight:700;color:var(--sage-700);">Read on Substack <span class="arrow">&rarr;</span></span>';
+            grid.appendChild(card);
+          });
+        }).catch(fallback);
+      })();
+      </script>
       <div class="home-subscribe-box anim">
         <h3>Get new posts in your inbox</h3>
         <p>Early childhood development, neurodiversity-affirming practice, and what it looks like on the ground in WNC. Free to subscribe.</p>
         <div style="max-width:480px;margin:0 auto;">
-          <iframe src="https://connectedcircles.substack.com/embed" width="480" height="150" style="width:100%;max-width:480px;background:white;border:1px solid var(--sage-200);border-radius:var(--r-md);" frameborder="0" scrolling="no" title="Subscribe to Field Notes"></iframe>
+          <iframe src="https://connectedcircles.substack.com/embed" width="480" height="150" style="width:100%;max-width:480px;background:white;border:1px solid var(--sage-200);border-radius:var(--r-md);" frameborder="0" scrolling="no" title="Subscribe to Field Notes" loading="lazy"></iframe>
         </div>
       </div>
     </div>
