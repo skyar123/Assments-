@@ -65,6 +65,21 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://connectedcircles.netlify.app/blog/you-left-and-you-came-back.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://connectedcircles.netlify.app/blog/the-fifteenth-time.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://connectedcircles.netlify.app/blog/what-a-yes-space-is.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://connectedcircles.netlify.app/community.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
