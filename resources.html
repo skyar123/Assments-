@@ -137,35 +137,86 @@
   <!-- Essays: longer-form pieces we reference from future field notes -->
   <section class="section section-white" id="essays">
     <div class="container">
-      <div class="section-header" style="margin-bottom:32px;">
-        <span class="overline">Essays</span>
+      <div class="section-header" style="margin-bottom:12px;">
+        <span class="overline">Essays &middot; Field Notes</span>
         <h2>Short essays from our team</h2>
         <p>Longer-form reflections we come back to often. These are the pieces we&rsquo;ll link future Field Notes posts into when the concepts show up in everyday life with young children.</p>
       </div>
+      <div aria-hidden="true" style="display:flex;height:4px;max-width:220px;margin:0 auto 40px;border-radius:9999px;overflow:hidden;">
+        <span style="flex:1;background:var(--terra-500);"></span>
+        <span style="flex:1;background:var(--sage-700);"></span>
+        <span style="flex:1;background:var(--lav-500);"></span>
+      </div>
+      <style>
+        .essay-card-thumb { position:relative; height:140px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+        .essay-card-thumb .seed-mark { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0.22; }
+        .essay-card-thumb .seed-mark svg { width:120px; height:120px; }
+        .essay-card-thumb .thumb-stripe { position:absolute; left:0; right:0; bottom:0; height:4px; display:flex; }
+        .essay-card-thumb .thumb-stripe span { flex:1; }
+        .essay-card-forest { background:#2d4a32; color:#fefdfb; }
+        .essay-card-forest .seed-mark { color:#fefdfb; opacity:0.18; }
+        .essay-card-cream { background:var(--cream); color:var(--sage-800); }
+        .essay-card-cream .seed-mark { color:var(--sage-700); }
+        .essay-card-terra { background:var(--terra-100); color:var(--terra-700); }
+        .essay-card-terra .seed-mark { color:var(--terra-600); opacity:0.28; }
+      </style>
       <div class="grid-3">
         <div class="resource-card anim">
-          <div class="resource-thumb" style="background:var(--sage-100);"></div>
+          <div class="resource-thumb essay-card-thumb essay-card-forest">
+            <div class="seed-mark" aria-hidden="true">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" stroke="currentColor" stroke-width="1.2" transform="translate(100,100)">
+                  <circle cx="0" cy="-35" r="35"/><circle cx="30.3" cy="-17.5" r="35"/><circle cx="30.3" cy="17.5" r="35"/>
+                  <circle cx="0" cy="35" r="35"/><circle cx="-30.3" cy="17.5" r="35"/><circle cx="-30.3" cy="-17.5" r="35"/>
+                  <circle cx="0" cy="0" r="20"/>
+                </g>
+              </svg>
+            </div>
+            <div class="thumb-stripe" aria-hidden="true"><span style="background:var(--terra-500);"></span><span style="background:var(--sage-500);"></span><span style="background:var(--lav-500);"></span></div>
+          </div>
           <div class="resource-body">
             <span class="resource-tag" style="background:var(--sage-100);color:var(--sage-800);">Attachment &middot; Ages 0&ndash;3</span>
-            <h3>You Left and You Came Back</h3>
+            <h3>You Left and You <em style="color:var(--sage-700);">Came Back</em></h3>
             <p>On peek-a-boo, object permanence, and practiced trust. Why the disappearance-and-reappearance ritual is the first rehearsal for the drop-off &mdash; and for every reliable return that follows.</p>
             <a href="blog/you-left-and-you-came-back.html" style="font-weight:600;font-size:0.88rem;">Read the essay <span class="arrow">&rarr;</span></a>
           </div>
         </div>
         <div class="resource-card anim anim-d1">
-          <div class="resource-thumb" style="background:var(--terra-100);"></div>
+          <div class="resource-thumb essay-card-thumb essay-card-cream">
+            <div class="seed-mark" aria-hidden="true">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" stroke="currentColor" stroke-width="1.2" transform="translate(100,100)">
+                  <circle cx="0" cy="-35" r="35"/><circle cx="30.3" cy="-17.5" r="35"/><circle cx="30.3" cy="17.5" r="35"/>
+                  <circle cx="0" cy="35" r="35"/><circle cx="-30.3" cy="17.5" r="35"/><circle cx="-30.3" cy="-17.5" r="35"/>
+                  <circle cx="0" cy="0" r="20"/>
+                </g>
+              </svg>
+            </div>
+            <div class="thumb-stripe" aria-hidden="true"><span style="background:var(--terra-500);"></span><span style="background:var(--sage-500);"></span><span style="background:var(--lav-500);"></span></div>
+          </div>
           <div class="resource-body">
             <span class="resource-tag" style="background:var(--terra-100);color:var(--terra-700);">Brain Development</span>
-            <h3>The Fifteenth Time</h3>
+            <h3>The Fifteenth <em style="color:var(--sage-700);">Time</em></h3>
             <p>Why repetition is the good part. On serve-and-return, circles of communication, and what the sixteenth tickle is actually doing for a child&rsquo;s brain &mdash; even when the adult is genuinely bored.</p>
             <a href="blog/the-fifteenth-time.html" style="font-weight:600;font-size:0.88rem;">Read the essay <span class="arrow">&rarr;</span></a>
           </div>
         </div>
         <div class="resource-card anim anim-d2">
-          <div class="resource-thumb" style="background:var(--lav-100);"></div>
+          <div class="resource-thumb essay-card-thumb essay-card-terra">
+            <div class="seed-mark" aria-hidden="true">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" stroke="currentColor" stroke-width="1.2" transform="translate(100,100)">
+                  <circle cx="0" cy="-35" r="35"/><circle cx="30.3" cy="-17.5" r="35"/><circle cx="30.3" cy="17.5" r="35"/>
+                  <circle cx="0" cy="35" r="35"/><circle cx="-30.3" cy="17.5" r="35"/><circle cx="-30.3" cy="-17.5" r="35"/>
+                  <circle cx="0" cy="0" r="20"/>
+                </g>
+              </svg>
+            </div>
+            <div class="thumb-stripe" aria-hidden="true"><span style="background:var(--terra-500);"></span><span style="background:var(--sage-500);"></span><span style="background:var(--lav-500);"></span></div>
+          </div>
           <div class="resource-body">
             <span class="resource-tag" style="background:var(--lav-100);color:var(--lav-700);">Environment &middot; RIE</span>
-            <h3>What a Yes Space Is</h3>
+            <h3>What a <em style="color:var(--sage-700);">Yes</em> Space Is</h3>
             <p>And what it doesn&rsquo;t have to look like. On Magda Gerber, Emmi Pikler, and the difference between a real yes space and the Instagram version. A yes space is safety, not a styled shelf.</p>
             <a href="blog/what-a-yes-space-is.html" style="font-weight:600;font-size:0.88rem;">Read the essay <span class="arrow">&rarr;</span></a>
           </div>
