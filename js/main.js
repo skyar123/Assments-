@@ -113,6 +113,21 @@
     setTimeout(function () { target.scrollIntoView({ block: 'start' }); }, 120);
   })();
 
+  // ── Substack embed facade (click-to-load) ──
+  document.querySelectorAll('.substack-facade').forEach(function (facade) {
+    facade.addEventListener('click', function load() {
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://connectedcircles.substack.com/embed';
+      iframe.width = facade.dataset.width || '480';
+      iframe.height = facade.dataset.height || '150';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('scrolling', 'no');
+      iframe.setAttribute('title', facade.dataset.title || 'Subscribe to Field Notes');
+      iframe.style.cssText = facade.dataset.iframeStyle || 'width:100%;max-width:480px;background:white;border:1px solid var(--sage-200);border-radius:var(--r-md);';
+      facade.replaceWith(iframe);
+    }, { once: true });
+  });
+
   // ── Smooth scroll for anchor links ──
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {

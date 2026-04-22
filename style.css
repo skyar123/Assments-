@@ -268,7 +268,7 @@ p:last-child { margin-bottom: 0; }
 .section-header .overline {
   display:inline-block; font-size:0.75rem; font-weight:700;
   letter-spacing:0.12em; text-transform:uppercase;
-  color:var(--terra-600); margin-bottom:12px;
+  color:var(--terra-700); margin-bottom:12px;
 }
 .section-header h2 { margin-bottom:16px; }
 .section-header p { color:var(--neutral-600); font-size:1.02rem; }
@@ -558,7 +558,7 @@ p:last-child { margin-bottom: 0; }
 }
 .cta .container { position:relative; z-index:1; }
 .cta h2 { color:#fff; margin-bottom:14px; }
-.cta p { color:rgba(255,255,255,0.75); max-width:560px; margin:0 auto 28px; font-size:1.02rem; }
+.cta p { color:rgba(255,255,255,0.92); max-width:560px; margin:0 auto 28px; font-size:1.02rem; }
 
 /* === Page hero (inner pages) === */
 .page-hero {
@@ -575,7 +575,7 @@ p:last-child { margin-bottom: 0; }
 .page-hero .overline {
   display:inline-block; font-size:0.75rem; font-weight:700;
   letter-spacing:0.12em; text-transform:uppercase;
-  color:var(--terra-600); margin-bottom:12px;
+  color:var(--terra-700); margin-bottom:12px;
 }
 .page-hero h1 { margin-bottom:14px; }
 .page-hero p { max-width:580px; margin:0 auto; color:var(--neutral-600); font-size:1.02rem; }
@@ -589,7 +589,7 @@ p:last-child { margin-bottom: 0; }
 }
 .footer-brand span { color:var(--sage-400); }
 .footer-desc { font-size:0.88rem; max-width:280px; line-height:1.6; }
-.footer h4 { color:#fff; font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:16px; }
+.footer h4, .footer .footer-heading { color:#fff; font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:16px; }
 .footer-links { list-style:none; }
 .footer-links li { margin-bottom:8px; }
 .footer-links a { color:rgba(255,255,255,0.55); font-size:0.88rem; transition:color var(--dur) var(--ease); }
@@ -631,7 +631,7 @@ p:last-child { margin-bottom: 0; }
   font-family:var(--font-display); font-size:1.1rem; font-weight:500;
   border:2px solid var(--sage-300); color:var(--sage-700);
 }
-.process-step h4 { margin-bottom:8px; }
+.process-step h3, .process-step h4 { margin-bottom:8px; font-size:1.1rem; }
 .process-step p { font-size:0.88rem; color:var(--neutral-500); }
 @media (max-width: 600px) { .process-steps { grid-template-columns:1fr; } }
 
@@ -980,6 +980,21 @@ p:last-child { margin-bottom: 0; }
 .testimonial-card footer span {
   font-size: 0.8rem; color: var(--neutral-400);
 }
+
+/* === Substack facade (click-to-load iframe) === */
+.substack-facade {
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  width:100%; max-width:480px; margin:0 auto; padding:28px 24px;
+  background:#fff; border:1px solid var(--sage-200); border-radius:var(--r-md);
+  cursor:pointer; font-family:inherit; color:var(--neutral-700);
+  transition:border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.substack-facade:hover, .substack-facade:focus {
+  border-color:var(--sage-400); box-shadow:var(--shadow-sm); outline:none;
+}
+.substack-facade .sf-title { font-weight:700; font-size:0.95rem; color:var(--sage-800); }
+.substack-facade .sf-sub { font-size:0.82rem; color:var(--neutral-500); }
+.substack-facade .sf-cta { font-size:0.85rem; color:var(--sage-700); font-weight:600; margin-top:4px; }
 
 /* === Print === */
 @media print { .nav,.footer,.cta { display:none; } body { background:#fff; } }
