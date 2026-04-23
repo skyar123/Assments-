@@ -46,6 +46,8 @@
     @media (max-width:720px) { .resources-callout { flex-direction:column; align-items:flex-start; padding:24px 24px 24px 32px; } .resources-callout .rc-btn { align-self:stretch; text-align:center; } }
   </style>
   <link rel="canonical" href="https://connectedcircles.netlify.app/blog.html">
+  <link rel="alternate" hreflang="en" href="https://connectedcircles.netlify.app/blog.html">
+  <link rel="alternate" hreflang="x-default" href="https://connectedcircles.netlify.app/blog.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ConnectEd Circles">
   <meta property="og:title" content="Field Notes | ConnectEd Circles">
@@ -75,7 +77,14 @@
   <!-- Substack posts (fetched from RSS) -->
   <section class="section">
     <div class="container">
-      <a href="resources.html" class="resources-callout anim" aria-label="Browse the full resource library and essays">
+      <div class="frame-bar">
+        <span>Recent posts &mdash; read here or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
+        <a href="https://connectedcircles.substack.com/feed" target="_blank" rel="noopener">RSS feed</a>
+      </div>
+      <div class="grid-3" id="substack-posts">
+        <div class="posts-state">Loading posts&hellip;</div>
+      </div>
+      <a href="resources.html" class="resources-callout anim" aria-label="Browse the full resource library and essays" style="margin:48px 0 0;">
         <span class="rc-stripe" aria-hidden="true"><span class="s-terra"></span><span class="s-sage"></span><span class="s-lav"></span></span>
         <div class="rc-text">
           <div class="rc-label">&mdash; Resource Library</div>
@@ -84,13 +93,6 @@
         </div>
         <span class="rc-btn">Browse Resources &rarr;</span>
       </a>
-      <div class="frame-bar">
-        <span>Recent posts &mdash; read here or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
-        <a href="https://connectedcircles.substack.com/feed" target="_blank" rel="noopener">RSS feed</a>
-      </div>
-      <div class="grid-3" id="substack-posts">
-        <div class="posts-state">Loading posts&hellip;</div>
-      </div>
     </div>
   </section>
 
@@ -121,13 +123,19 @@
       '</div>';
     }
 
+    var rendered = false;
+    var timeoutId = setTimeout(function () { if (!rendered) { rendered = true; renderFallback(); } }, 6000);
+
     fetch(API)
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (data) {
+        if (rendered) return;
         if (!data || data.status !== 'ok' || !data.items || !data.items.length) {
+          rendered = true; clearTimeout(timeoutId);
           renderFallback();
           return;
         }
+        rendered = true; clearTimeout(timeoutId);
         grid.innerHTML = '';
         data.items.slice(0, 12).forEach(function (item, i) {
           var date = new Date(item.pubDate);
@@ -168,7 +176,7 @@
           grid.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
         }
       })
-      .catch(renderFallback);
+      .catch(function () { if (!rendered) { rendered = true; clearTimeout(timeoutId); renderFallback(); } });
   })();
   </script>
 
@@ -243,7 +251,7 @@
 
   <section class="cta"><div class="container"><h2>Want to write for us?</h2><p>We welcome guest posts from early childhood practitioners, family support workers, and researchers working in our communities. Reach out to start the conversation.</p><a href="contact.html" class="btn btn-white">Get in Touch <span class="arrow">&rarr;</span></a></div></section>
 
-  <footer class="footer"><div class="container"><div class="footer-grid"><div><div class="footer-brand">Connect<span>Ed</span> Circles</div><p class="footer-desc">Reflective coaching, professional development, and family support grounded in relationships.</p></div><div><h4>Navigate</h4><ul class="footer-links"><li><a href="about.html">About Us</a></li><li><a href="team.html">Meet the Team</a></li><li><a href="blog.html">Field Notes Blog</a></li><li><a href="resources.html">Resource Library</a></li><li><a href="subscribe.html">Subscribe to Field Notes</a></li><li><a href="contact.html">Contact Us</a></li></ul></div><div><h4>Explore</h4><ul class="footer-links"><li><a href="workshops.html">Workshops</a></li><li><a href="services.html">Services</a></li><li><a href="frameworks.html">Our Frameworks</a></li><li><a href="training.html">Autism Training</a></li><li><a href="directory.html">WNC Directory</a></li><li><a href="es/index.html">Español</a></li></ul></div><div><h4>Connect</h4><ul class="footer-links"><li><a href="https://www.instagram.com/connectedcirclescommunity" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:info@connectedcirclescommunity.com">Email Us</a></li><li><a href="blog.html">Field Notes Blog</a></li></ul></div></div><div class="footer-bottom"><p>&copy; 2026 ConnectEd Circles, LLC.</p><p>Asheville, NC</p></div></div></footer>
+  <footer class="footer"><div class="container"><div class="footer-grid"><div><div class="footer-brand">Connect<span>Ed</span> Circles</div><p class="footer-desc">Reflective coaching, professional development, and family support grounded in relationships.</p></div><div><h3 class="footer-heading">Navigate</h3><ul class="footer-links"><li><a href="about.html">About Us</a></li><li><a href="team.html">Meet the Team</a></li><li><a href="blog.html">Field Notes Blog</a></li><li><a href="resources.html">Resource Library</a></li><li><a href="subscribe.html">Subscribe to Field Notes</a></li><li><a href="contact.html">Contact Us</a></li></ul></div><div><h3 class="footer-heading">Explore</h3><ul class="footer-links"><li><a href="workshops.html">Workshops</a></li><li><a href="services.html">Services</a></li><li><a href="frameworks.html">Our Frameworks</a></li><li><a href="training.html">Autism Training</a></li><li><a href="directory.html">WNC Directory</a></li><li><a href="es/index.html">Español</a></li></ul></div><div><h3 class="footer-heading">Connect</h3><ul class="footer-links"><li><a href="https://www.instagram.com/connectedcirclescommunity" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:info@connectedcirclescommunity.com">Email Us</a></li><li><a href="blog.html">Field Notes Blog</a></li></ul></div></div><div class="footer-bottom"><p>&copy; 2026 ConnectEd Circles, LLC.</p><p>Asheville, NC</p></div></div></footer>
   <script src="js/main.js"></script>
 </body>
 </html>

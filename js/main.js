@@ -96,6 +96,23 @@
     });
   });
 
+  // ── Accordion: open item matching URL hash on page load ──
+  (function () {
+    var hash = window.location.hash;
+    if (!hash) return;
+    var target = document.querySelector(hash + '.accordion-item');
+    if (!target) return;
+    document.querySelectorAll('.accordion-item.open').forEach(function (el) {
+      el.classList.remove('open');
+      var b = el.querySelector('.accordion-header');
+      if (b) b.setAttribute('aria-expanded', 'false');
+    });
+    target.classList.add('open');
+    var btn = target.querySelector('.accordion-header');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+    setTimeout(function () { target.scrollIntoView({ block: 'start' }); }, 120);
+  })();
+
   // ── Smooth scroll for anchor links ──
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {

@@ -185,4 +185,20 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://connectedcircles.netlify.app/es/training.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://connectedcircles.netlify.app/training.html"/>
   </url>
+  <url>
+    <loc>https://connectedcircles.netlify.app/es/frameworks.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://connectedcircles.netlify.app/frameworks.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://connectedcircles.netlify.app/es/frameworks.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://connectedcircles.netlify.app/frameworks.html"/>
+  </url>
+  <url>
+    <loc>https://connectedcircles.netlify.app/es/directory.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://connectedcircles.netlify.app/directory.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://connectedcircles.netlify.app/es/directory.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://connectedcircles.netlify.app/directory.html"/>
+  </url>
 </urlset>

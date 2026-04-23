@@ -257,8 +257,12 @@
             '<p style="margin:0 0 14px;color:var(--neutral-500);">Field Notes is published on Substack. Head there to read the latest reflections from the team.</p>' +
             '<a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener" class="btn btn-primary">Open Field Notes on Substack <span class="arrow">&rarr;</span></a></div>';
         }
+        var rendered = false;
+        var timeoutId = setTimeout(function () { if (!rendered) { rendered = true; fallback(); } }, 6000);
         fetch(API).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (data) {
-          if (!data || data.status !== 'ok' || !data.items || !data.items.length) { fallback(); return; }
+          if (rendered) return;
+          if (!data || data.status !== 'ok' || !data.items || !data.items.length) { rendered = true; clearTimeout(timeoutId); fallback(); return; }
+          rendered = true; clearTimeout(timeoutId);
           grid.innerHTML = '';
           data.items.slice(0, 2).forEach(function (item, i) {
             var d = new Date(item.pubDate);
@@ -276,7 +280,7 @@
               '<span style="font-size:0.85rem;font-weight:700;color:var(--sage-700);">Read on Substack <span class="arrow">&rarr;</span></span>';
             grid.appendChild(card);
           });
-        }).catch(fallback);
+        }).catch(function () { if (!rendered) { rendered = true; clearTimeout(timeoutId); fallback(); } });
       })();
       </script>
       <div class="home-subscribe-box anim">
@@ -300,17 +304,17 @@
       <div class="process-steps">
         <div class="process-step anim">
           <div class="process-num">1</div>
-          <h4>Reach Out</h4>
+          <h3>Reach Out</h3>
           <p>Send us a message or email. No pressure, no commitment&mdash;just tell us a little about what&rsquo;s on your mind.</p>
         </div>
         <div class="process-step anim anim-d1">
           <div class="process-num">2</div>
-          <h4>We Listen</h4>
+          <h3>We Listen</h3>
           <p>We start with a free introductory call to understand your context, your people, and what support might look like.</p>
         </div>
         <div class="process-step anim anim-d2">
           <div class="process-num">3</div>
-          <h4>We Build Together</h4>
+          <h3>We Build Together</h3>
           <p>We design an approach that fits your specific needs&mdash;not a package, but a real partnership.</p>
         </div>
       </div>
@@ -392,7 +396,7 @@
           <p class="footer-desc">Reflective coaching, professional development, and family support grounded in relationships. Serving Western North Carolina and beyond.</p>
         </div>
         <div>
-          <h4>Navigate</h4>
+          <h3 class="footer-heading">Navigate</h3>
           <ul class="footer-links">
             <li><a href="about.html">About Us</a></li>
             <li><a href="team.html">Meet the Team</a></li>
@@ -403,7 +407,7 @@
           </ul>
         </div>
         <div>
-          <h4>Explore</h4>
+          <h3 class="footer-heading">Explore</h3>
           <ul class="footer-links">
             <li><a href="workshops.html">Workshops</a></li>
             <li><a href="services.html">Services</a></li>
@@ -416,7 +420,7 @@
           </ul>
         </div>
         <div>
-          <h4>Connect</h4>
+          <h3 class="footer-heading">Connect</h3>
           <ul class="footer-links">
             <li><a href="https://www.instagram.com/connectedcirclescommunity" target="_blank" rel="noopener">Instagram</a></li>
             <li><a href="mailto:info@connectedcirclescommunity.com">Email Us</a></li>
