@@ -75,7 +75,14 @@
   <!-- Substack posts (fetched from RSS) -->
   <section class="section">
     <div class="container">
-      <a href="resources.html" class="resources-callout anim" aria-label="Browse the full resource library and essays">
+      <div class="frame-bar">
+        <span>Recent posts &mdash; read here or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
+        <a href="https://connectedcircles.substack.com/feed" target="_blank" rel="noopener">RSS feed</a>
+      </div>
+      <div class="grid-3" id="substack-posts">
+        <div class="posts-state">Loading posts&hellip;</div>
+      </div>
+      <a href="resources.html" class="resources-callout anim" aria-label="Browse the full resource library and essays" style="margin:48px 0 0;">
         <span class="rc-stripe" aria-hidden="true"><span class="s-terra"></span><span class="s-sage"></span><span class="s-lav"></span></span>
         <div class="rc-text">
           <div class="rc-label">&mdash; Resource Library</div>
@@ -84,13 +91,6 @@
         </div>
         <span class="rc-btn">Browse Resources &rarr;</span>
       </a>
-      <div class="frame-bar">
-        <span>Recent posts &mdash; read here or <a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener">open Field Notes on Substack &rarr;</a></span>
-        <a href="https://connectedcircles.substack.com/feed" target="_blank" rel="noopener">RSS feed</a>
-      </div>
-      <div class="grid-3" id="substack-posts">
-        <div class="posts-state">Loading posts&hellip;</div>
-      </div>
     </div>
   </section>
 
@@ -121,13 +121,19 @@
       '</div>';
     }
 
+    var rendered = false;
+    var timeoutId = setTimeout(function () { if (!rendered) { rendered = true; renderFallback(); } }, 6000);
+
     fetch(API)
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (data) {
+        if (rendered) return;
         if (!data || data.status !== 'ok' || !data.items || !data.items.length) {
+          rendered = true; clearTimeout(timeoutId);
           renderFallback();
           return;
         }
+        rendered = true; clearTimeout(timeoutId);
         grid.innerHTML = '';
         data.items.slice(0, 12).forEach(function (item, i) {
           var date = new Date(item.pubDate);
@@ -168,7 +174,7 @@
           grid.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
         }
       })
-      .catch(renderFallback);
+      .catch(function () { if (!rendered) { rendered = true; clearTimeout(timeoutId); renderFallback(); } });
   })();
   </script>
 
@@ -180,11 +186,7 @@
         <h2>Become a Circle Member</h2>
         <p>Free subscribers get access to our full resource library: clinical guides, family handouts, and practitioner tools  -  delivered to your inbox. Plus monthly Field Notes and early access to trainings.</p>
         <div class="substack-embed-wrap">
-          <button type="button" class="substack-facade" data-width="480" data-height="320" data-title="Subscribe to Field Notes" data-iframe-style="display:block;width:100%;border:none;background:white;" aria-label="Load Substack subscribe form for Field Notes">
-            <span class="sf-title">Subscribe to Field Notes</span>
-            <span class="sf-sub">Free essays on early childhood practice &middot; hosted on Substack</span>
-            <span class="sf-cta">Click to load subscribe form &rarr;</span>
-          </button>
+          <iframe src="https://connectedcircles.substack.com/embed" width="480" height="320" style="background:white;" frameborder="0" scrolling="no" title="Subscribe to Field Notes" loading="lazy"></iframe>
         </div>
         <p class="subscribe-note">Hosted free on Substack. Unsubscribe any time. &nbsp;&bull;&nbsp; <a href="subscribe.html" style="color:var(--sage-300);">Dedicated subscribe page &rarr;</a></p>
       </div>

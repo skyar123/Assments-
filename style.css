@@ -981,20 +981,5 @@ p:last-child { margin-bottom: 0; }
   font-size: 0.8rem; color: var(--neutral-400);
 }
 
-/* === Substack facade (click-to-load iframe) === */
-.substack-facade {
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
-  width:100%; max-width:480px; margin:0 auto; padding:28px 24px;
-  background:#fff; border:1px solid var(--sage-200); border-radius:var(--r-md);
-  cursor:pointer; font-family:inherit; color:var(--neutral-700);
-  transition:border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
-}
-.substack-facade:hover, .substack-facade:focus {
-  border-color:var(--sage-400); box-shadow:var(--shadow-sm); outline:none;
-}
-.substack-facade .sf-title { font-weight:700; font-size:0.95rem; color:var(--sage-800); }
-.substack-facade .sf-sub { font-size:0.82rem; color:var(--neutral-500); }
-.substack-facade .sf-cta { font-size:0.85rem; color:var(--sage-700); font-weight:600; margin-top:4px; }
-
 /* === Print === */
 @media print { .nav,.footer,.cta { display:none; } body { background:#fff; } }

@@ -84,11 +84,7 @@
           </div>
           <p style="font-size:0.82rem;color:var(--neutral-500);margin-top:12px;">Or <a href="blog.html" style="color:var(--sage-700);text-decoration:underline;text-underline-offset:3px;">read our Field Notes blog</a></p>
           <div class="anim anim-d3" style="margin-top:20px;max-width:480px;">
-            <button type="button" class="substack-facade" data-width="480" data-height="150" data-title="Subscribe to Field Notes" aria-label="Load Substack subscribe form for Field Notes">
-              <span class="sf-title">Subscribe to Field Notes</span>
-              <span class="sf-sub">Free essays on early childhood practice &middot; hosted on Substack</span>
-              <span class="sf-cta">Click to load subscribe form &rarr;</span>
-            </button>
+            <iframe src="https://connectedcircles.substack.com/embed" width="480" height="150" style="width:100%;max-width:480px;background:white;border:1px solid var(--sage-200);border-radius:var(--r-md);" frameborder="0" scrolling="no" title="Subscribe to Field Notes" loading="lazy"></iframe>
           </div>
           <p style="font-size:0.75rem;color:var(--neutral-400);margin-top:8px;">Field Notes from our team, hosted free on Substack. Unsubscribe any time.</p>
         </div>
@@ -261,8 +257,12 @@
             '<p style="margin:0 0 14px;color:var(--neutral-500);">Field Notes is published on Substack. Head there to read the latest reflections from the team.</p>' +
             '<a href="https://connectedcircles.substack.com/" target="_blank" rel="noopener" class="btn btn-primary">Open Field Notes on Substack <span class="arrow">&rarr;</span></a></div>';
         }
+        var rendered = false;
+        var timeoutId = setTimeout(function () { if (!rendered) { rendered = true; fallback(); } }, 6000);
         fetch(API).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (data) {
-          if (!data || data.status !== 'ok' || !data.items || !data.items.length) { fallback(); return; }
+          if (rendered) return;
+          if (!data || data.status !== 'ok' || !data.items || !data.items.length) { rendered = true; clearTimeout(timeoutId); fallback(); return; }
+          rendered = true; clearTimeout(timeoutId);
           grid.innerHTML = '';
           data.items.slice(0, 2).forEach(function (item, i) {
             var d = new Date(item.pubDate);
@@ -280,18 +280,14 @@
               '<span style="font-size:0.85rem;font-weight:700;color:var(--sage-700);">Read on Substack <span class="arrow">&rarr;</span></span>';
             grid.appendChild(card);
           });
-        }).catch(fallback);
+        }).catch(function () { if (!rendered) { rendered = true; clearTimeout(timeoutId); fallback(); } });
       })();
       </script>
       <div class="home-subscribe-box anim">
         <h3>Get new posts in your inbox</h3>
         <p>Early childhood development, neurodiversity-affirming practice, and what it looks like on the ground in WNC. Free to subscribe.</p>
         <div style="max-width:480px;margin:0 auto;">
-          <button type="button" class="substack-facade" data-width="480" data-height="150" data-title="Subscribe to Field Notes" aria-label="Load Substack subscribe form for Field Notes">
-            <span class="sf-title">Subscribe to Field Notes</span>
-            <span class="sf-sub">Free essays on early childhood practice &middot; hosted on Substack</span>
-            <span class="sf-cta">Click to load subscribe form &rarr;</span>
-          </button>
+          <iframe src="https://connectedcircles.substack.com/embed" width="480" height="150" style="width:100%;max-width:480px;background:white;border:1px solid var(--sage-200);border-radius:var(--r-md);" frameborder="0" scrolling="no" title="Subscribe to Field Notes" loading="lazy"></iframe>
         </div>
       </div>
     </div>
