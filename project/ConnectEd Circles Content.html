@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ConnectEd Circles — Brand Content</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel">
+const DC = {
+  bg: '#eeeae2',
+  grid: 'rgba(0,0,0,0.05)',
+  label: 'rgba(60,50,40,0.6)',
+  title: 'rgba(40,30,20,0.85)',
+  subtitle: 'rgba(60,50,40,0.55)',
+  font: "'DM Sans', sans-serif",
+};
+function DesignCanvas({ children }) {
+  const vpRef = React.useRef(null);
+  const worldRef = React.useRef(null);
+  const tf = React.useRef({ x: 0, y: 0, scale: 1 });
+  const apply = React.useCallback(() => {
+    const { x, y, scale } = tf.current;
+    if (worldRef.current) worldRef.current.style.transform = `translate3d(${x}px,${y}px,0) scale(${scale})`;
+  }, []);
+  React.useEffect(() => {
+    const vp = vpRef.current; if (!vp) return;
+    const zoomAt = (cx, cy, factor) => {
+      const r = vp.getBoundingClientRect();
+      const px = cx-r.left, py = cy-r.top, t = tf.current;
+      const next = Math.min(8, Math.max(0.1, t.scale * factor));
+      const k = next / t.scale;
+      t.x = px-(px-t.x)*k; t.y = py-(py-t.y)*k; t.scale = next; apply();
+    };
+    let isGesturing = false, gsBase = 1;
+    const onWheel = e => {
+      e.preventDefault();
+      if (isGesturing) return;
+      if (e.ctrlKey) zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY*0.01));
+      else if (e.deltaMode !== 0 || (e.deltaX===0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY)>=40))
+        zoomAt(e.clientX, e.clientY, Math.exp(-Math.sign(e.deltaY)*0.18));
+      else { tf.current.x -= e.deltaX; tf.current.y -= e.deltaY; apply(); }
+    };
+    const onGS = e => { e.preventDefault(); isGesturing=true; gsBase=tf.current.scale; };
+    const onGC = e => { e.preventDefault(); zoomAt(e.clientX,e.clientY,(gsBase*e.scale)/tf.current.scale); };
+    const onGE = e => { e.preventDefault(); isGesturing=false; };
+    let drag = null;
+    const onPD = e => {
+      const onBg = e.target===vp||e.target===worldRef.current;
+      if (!(e.button===1||(e.button===0&&onBg))) return;
+      e.preventDefault(); vp.setPointerCapture(e.pointerId);
+      drag={id:e.pointerId,lx:e.clientX,ly:e.clientY}; vp.style.cursor='grabbing';
+    };
+    const onPM = e => {
+      if (!drag||e.pointerId!==drag.id) return;
+      tf.current.x+=e.clientX-drag.lx; tf.current.y+=e.clientY-drag.ly;
+      drag.lx=e.clientX; drag.ly=e.clientY; apply();
+    };
+    const onPU = e => { if (!drag||e.pointerId!==drag.id) return; vp.releasePointerCapture(e.pointerId); drag=null; vp.style.cursor=''; };
+    vp.addEventListener('wheel',onWheel,{passive:false});
+    vp.addEventListener('gesturestart',onGS,{passive:false});
+    vp.addEventListener('gesturechange',onGC,{passive:false});
+    vp.addEventListener('gestureend',onGE,{passive:false});
+    vp.addEventListener('pointerdown',onPD);
+    vp.addEventListener('pointermove',onPM);
+    vp.addEventListener('pointerup',onPU);
+    vp.addEventListener('pointercancel',onPU);
+    return () => {
+      vp.removeEventListener('wheel',onWheel);
+      vp.removeEventListener('gesturestart',onGS);
+      vp.removeEventListener('gesturechange',onGC);
+      vp.removeEventListener('gestureend',onGE);
+      vp.removeEventListener('pointerdown',onPD);
+      vp.removeEventListener('pointermove',onPM);
+      vp.removeEventListener('pointerup',onPU);
+      vp.removeEventListener('pointercancel',onPU);
+    };
+  }, [apply]);
+  const gridSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 0H0v120' fill='none' stroke='${encodeURIComponent(DC.grid)}' stroke-width='1'/%3E%3C/svg%3E")`;
+  return (
+    <div ref={vpRef} style={{height:'100vh',width:'100vw',background:DC.bg,overflow:'hidden',overscrollBehavior:'none',touchAction:'none',position:'relative',boxSizing:'border-box'}}>
+      <div ref={worldRef} style={{position:'absolute',top:0,left:0,transformOrigin:'0 0',willChange:'transform',width:'max-content',minWidth:'100%',minHeight:'100%',padding:'60px 0 80px',backgroundImage:gridSvg,backgroundSize:'120px 120px'}}>
+        {children}
+      </div>
+    </div>
+  );
+}
+function DCSection({ title, subtitle, children, gap=48 }) {
+  return (
+    <div style={{marginBottom:80}}>
+      <div style={{padding:'0 60px 36px'}}>
+        <div style={{fontSize:22,fontWeight:600,color:DC.title,letterSpacing:-0.3,marginBottom:4,fontFamily:DC.font}}>{title}</div>
+        {subtitle && <div style={{fontSize:14,color:DC.subtitle,fontFamily:DC.font}}>{subtitle}</div>}
+      </div>
+      <div style={{display:'flex',gap,padding:'0 60px',alignItems:'flex-start',width:'max-content'}}>{children}</div>
+    </div>
+  );
+}
+function DCArtboard({ label, children, width, height, style={} }) {
+  return (
+    <div style={{position:'relative',flexShrink:0}}>
+      {label && <div style={{position:'absolute',bottom:'100%',left:0,paddingBottom:8,fontSize:12,fontWeight:500,color:DC.label,whiteSpace:'nowrap',fontFamily:DC.font}}>{label}</div>}
+      <div style={{borderRadius:2,boxShadow:'0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.06)',overflow:'hidden',width,height,background:'#fff',...style}}>{children}</div>
+    </div>
+  );
+}
+Object.assign(window, { DesignCanvas, DCSection, DCArtboard });
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #eeeae2; font-family: 'DM Sans', sans-serif; }
+
+  /* Tweaks panel */
+  #tweaks-panel {
+    display: none;
+    position: fixed; bottom: 24px; right: 24px;
+    background: white; border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 20px; width: 240px; z-index: 9999;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+  }
+  #tweaks-panel h3 { font-size: 14px; font-weight: 600; margin-bottom: 14px; color: #2d4a3e; }
+  #tweaks-panel label { display: block; margin-bottom: 10px; color: #444; }
+  #tweaks-panel select, #tweaks-panel input[type=range] { width: 100%; margin-top: 4px; }
+  #tweaks-panel input[type=color] { width: 32px; height: 24px; border: none; cursor: pointer; }
+</style>
+</head>
+<body>
+<script type="text/babel">
+
+const BRAND = {
+  cream: '#f0ede5',
+  darkGreen: '#2d4a3e',
+  sage: '#5d8272',
+  terracotta: '#c97b4b',
+  purple: '#8b7aa8',
+  lightSage: '#e8eeeb',
+  lightTerra: '#f5e8dc',
+  lightPurple: '#ece9f3',
+  darkText: '#1a2520',
+  midText: '#4a5e57',
+};
+
+// Real logo assets
+function LogoMark({ size = 60, light = false }) {
+  return (
+    <img
+      src={window.LOGO_MARK}
+      width={size} height={size}
+      style={{
+        objectFit: 'contain',
+        display: 'block',
+        mixBlendMode: light ? 'screen' : 'multiply',
+        filter: light ? 'invert(1) brightness(2)' : 'none',
+      }}
+    />
+  );
+}
+
+function LogoFull({ size = 40, light = false }) {
+  // Full logo: mark + wordmark from uploaded image
+  const h = Math.round(size * (592/1772) * 3.5);
+  return (
+    <img
+      src={window.LOGO_FULL}
+      height={h}
+      style={{
+        objectFit: 'contain',
+        display: 'block',
+        mixBlendMode: light ? 'screen' : 'multiply',
+        filter: light ? 'invert(1) brightness(1.8)' : 'none',
+        maxWidth: size * 3.5,
+      }}
+    />
+  );
+}
+
+// ─── PIECE 1: Instagram Post ───────────────────────────────────
+function InstagramPost({ variant = 'green' }) {
+  const themes = {
+    green: { bg: BRAND.darkGreen, accent: BRAND.terracotta, text: BRAND.cream, sub: '#a3c4b5', deco: BRAND.sage },
+    cream: { bg: BRAND.cream, accent: BRAND.darkGreen, text: BRAND.darkText, sub: BRAND.midText, deco: BRAND.sage },
+    terra: { bg: BRAND.lightTerra, accent: BRAND.terracotta, text: BRAND.darkText, sub: BRAND.midText, deco: BRAND.terracotta },
+  };
+  const t = themes[variant];
+  return (
+    <div style={{
+      width: 360, height: 360, background: t.bg,
+      position: 'relative', overflow: 'hidden',
+      fontFamily: "'DM Sans', sans-serif",
+    }}>
+      {/* Decorative circles background */}
+      <svg style={{ position:'absolute', top:-40, right:-40, opacity: 0.12 }} width="220" height="220" viewBox="0 0 220 220" fill="none">
+        {[0,1,2,3,4,5].map(i => {
+          const a = i * 60 * Math.PI / 180;
+          const r = 44;
+          const cx = 110 + r * Math.cos(a), cy = 110 + r * Math.sin(a);
+          return <circle key={i} cx={cx} cy={cy} r={r} stroke={t.deco} strokeWidth="1.5"/>;
+        })}
+        <circle cx="110" cy="110" r="44" stroke={t.deco} strokeWidth="1.5"/>
+      </svg>
+
+      {/* Top logo */}
+      <div style={{ position:'absolute', top: 22, left: 22 }}>
+        <LogoFull size={28} light={variant === 'green'} />
+      </div>
+
+      {/* Main quote */}
+      <div style={{ position:'absolute', top:0, left:0, right:0, bottom:0,
+        display:'flex', flexDirection:'column', justifyContent:'center',
+        padding: '60px 28px 28px' }}>
+        <div style={{
+          fontFamily:"'Playfair Display', serif",
+          fontSize: 22, lineHeight: 1.35,
+          color: t.text, fontWeight: 600,
+          marginBottom: 16,
+        }}>
+          "Children grow when<br/>the adults around<br/>them feel <em style={{color:t.accent}}>supported.</em>"
+        </div>
+        <div style={{ width: 36, height: 2, background: t.accent, marginBottom: 12 }}/>
+        <div style={{ fontSize: 12, color: t.sub, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          connectedcircles.netlify.app
+        </div>
+      </div>
+
+      {/* Bottom tag */}
+      <div style={{
+        position:'absolute', bottom: 20, right: 22,
+        fontSize: 11, color: t.sub, opacity: 0.7,
+        letterSpacing: '0.05em'
+      }}>#ConnectedCircles</div>
+    </div>
+  );
+}
+
+// ─── PIECE 2: Quote Card (Story format) ───────────────────────
+function QuoteCard() {
+  return (
+    <div style={{
+      width: 270, height: 480, background: BRAND.lightSage,
+      position: 'relative', overflow: 'hidden',
+      fontFamily: "'DM Sans', sans-serif",
+      display: 'flex', flexDirection: 'column',
+    }}>
+      {/* Top green band */}
+      <div style={{ background: BRAND.darkGreen, padding: '22px 24px 18px' }}>
+        <LogoFull size={24} light />
+      </div>
+
+      {/* Deco circles */}
+      <svg style={{ position:'absolute', bottom:-30, left:-30, opacity:0.15 }} width="180" height="180" viewBox="0 0 180 180" fill="none">
+        {[0,1,2,3,4,5].map(i => {
+          const a = i * 60 * Math.PI/180, r=36;
+          return <circle key={i} cx={90+r*Math.cos(a)} cy={90+r*Math.sin(a)} r={r} stroke={BRAND.darkGreen} strokeWidth="1.5"/>;
+        })}
+        <circle cx="90" cy="90" r="36" stroke={BRAND.darkGreen} strokeWidth="1.5"/>
+      </svg>
+
+      <div style={{ flex: 1, display:'flex', flexDirection:'column', justifyContent:'center', padding:'28px 24px' }}>
+        <div style={{ fontSize: 44, color: BRAND.terracotta, fontFamily:"'Playfair Display', serif", lineHeight:1, marginBottom: 8 }}>"</div>
+        <div style={{
+          fontFamily:"'Playfair Display', serif",
+          fontSize: 18, lineHeight: 1.5, color: BRAND.darkText,
+          fontStyle: 'italic', marginBottom: 20,
+        }}>
+          Reflective practice isn't a luxury — it's the foundation of every caring relationship.
+        </div>
+        <div style={{ width: 30, height: 2, background: BRAND.sage, marginBottom: 14 }}/>
+        <div style={{ fontSize: 12, color: BRAND.midText, fontWeight: 500 }}>Field Notes</div>
+        <div style={{ fontSize: 11, color: BRAND.midText, opacity: 0.7 }}>ConnectEd Circles</div>
+      </div>
+
+      {/* Purple tag */}
+      <div style={{
+        background: BRAND.purple, color: 'white',
+        padding: '10px 24px', fontSize: 11,
+        letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500,
+      }}>Asheville & Western NC</div>
+    </div>
+  );
+}
+
+// ─── PIECE 3: Email Newsletter Header ─────────────────────────
+function EmailHeader() {
+  return (
+    <div style={{ width: 420, fontFamily:"'DM Sans', sans-serif", overflow:'hidden', borderRadius: 2 }}>
+      {/* Header bar */}
+      <div style={{
+        background: BRAND.darkGreen, padding: '28px 32px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        position: 'relative', overflow: 'hidden'
+      }}>
+        <svg style={{ position:'absolute', right:-20, top:-20, opacity:0.1 }} width="160" height="160" viewBox="0 0 160 160" fill="none">
+          {[0,1,2,3,4,5].map(i => {
+            const a = i*60*Math.PI/180, r=32;
+            return <circle key={i} cx={80+r*Math.cos(a)} cy={80+r*Math.sin(a)} r={r} stroke="white" strokeWidth="1.5"/>;
+          })}
+          <circle cx="80" cy="80" r="32" stroke="white" strokeWidth="1.5"/>
+        </svg>
+        <LogoFull size={30} light />
+        <div style={{ textAlign:'right' }}>
+          <div style={{ color:'#a3c4b5', fontSize:10, letterSpacing:'0.1em', textTransform:'uppercase' }}>Field Notes</div>
+          <div style={{ color:'white', fontSize:13, fontWeight:500 }}>April 2026</div>
+        </div>
+      </div>
+      {/* Accent stripe */}
+      <div style={{ display:'flex', height:4 }}>
+        <div style={{ flex:1, background: BRAND.terracotta }}/>
+        <div style={{ flex:1, background: BRAND.sage }}/>
+        <div style={{ flex:1, background: BRAND.purple }}/>
+      </div>
+      {/* Body preview */}
+      <div style={{ background: BRAND.cream, padding: '28px 32px' }}>
+        <div style={{ fontSize:11, color: BRAND.midText, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10 }}>
+          — Asheville & Western North Carolina
+        </div>
+        <div style={{
+          fontFamily:"'Playfair Display', serif",
+          fontSize: 22, color: BRAND.darkText, lineHeight:1.3,
+          fontWeight: 600, marginBottom: 14,
+        }}>
+          What happened when we listened<br/>before we taught.
+        </div>
+        <div style={{ fontSize:13, color: BRAND.midText, lineHeight:1.6, marginBottom:18 }}>
+          This month in Field Notes, we're sharing stories from educators across our region who found that slowing down — really listening — changed everything in their classrooms.
+        </div>
+        <div style={{
+          display:'inline-block',
+          background: BRAND.darkGreen, color: 'white',
+          padding: '10px 22px', borderRadius: 100,
+          fontSize: 13, fontWeight: 500, letterSpacing:'0.02em',
+        }}>Read this month's notes →</div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PIECE 4: Blog Post Banner ─────────────────────────────────
+function BlogBanner() {
+  return (
+    <div style={{
+      width: 420, background: BRAND.lightTerra,
+      fontFamily:"'DM Sans', sans-serif",
+      position:'relative', overflow:'hidden', minHeight: 200,
+    }}>
+      <svg style={{ position:'absolute', left:-40, top:-40, opacity:0.12 }} width="240" height="240" viewBox="0 0 240 240" fill="none">
+        {[0,1,2,3,4,5].map(i => {
+          const a = i*60*Math.PI/180, r=48;
+          return <circle key={i} cx={120+r*Math.cos(a)} cy={120+r*Math.sin(a)} r={r} stroke={BRAND.terracotta} strokeWidth="1.5"/>;
+        })}
+        <circle cx="120" cy="120" r="48" stroke={BRAND.terracotta} strokeWidth="1.5"/>
+      </svg>
+      <div style={{ position:'relative', padding:'32px 36px 28px' }}>
+        <div style={{
+          display:'inline-block', background: BRAND.terracotta,
+          color:'white', padding:'4px 12px', borderRadius:100,
+          fontSize:10, fontWeight:600, letterSpacing:'0.1em',
+          textTransform:'uppercase', marginBottom:16,
+        }}>Field Notes Blog</div>
+        <div style={{
+          fontFamily:"'Playfair Display', serif",
+          fontSize: 24, color: BRAND.darkText, lineHeight:1.25,
+          fontWeight:700, marginBottom: 12,
+        }}>
+          Why Circle of Security<br/>Matters for Families
+        </div>
+        <div style={{ fontSize:12, color:BRAND.midText }}>
+          May 2026 · 5 min read · <span style={{color:BRAND.terracotta}}>For Parents & Caregivers</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PIECE 5: Workshop Flyer ───────────────────────────────────
+function WorkshopFlyer() {
+  return (
+    <div style={{
+      width: 300, background: BRAND.cream,
+      fontFamily:"'DM Sans', sans-serif",
+      border: `3px solid ${BRAND.darkGreen}`,
+      position:'relative', overflow:'hidden',
+    }}>
+      {/* Top */}
+      <div style={{
+        background: BRAND.darkGreen, padding:'24px 24px 20px',
+        position:'relative', overflow:'hidden',
+      }}>
+        <svg style={{ position:'absolute', right:-30, top:-30, opacity:0.15 }} width="160" height="160" viewBox="0 0 160 160" fill="none">
+          {[0,1,2,3,4,5].map(i => {
+            const a=i*60*Math.PI/180,r=32;
+            return <circle key={i} cx={80+r*Math.cos(a)} cy={80+r*Math.sin(a)} r={r} stroke="white" strokeWidth="1.5"/>;
+          })}
+          <circle cx="80" cy="80" r="32" stroke="white" strokeWidth="1.5"/>
+        </svg>
+        <div style={{ fontSize:10, color:'#a3c4b5', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:10 }}>
+          Professional Development Workshop
+        </div>
+        <div style={{
+          fontFamily:"'Playfair Display', serif",
+          fontSize:22, color:'white', fontWeight:700, lineHeight:1.2,
+          marginBottom:14,
+        }}>Reflective<br/>Practices for<br/>the Classroom</div>
+        <LogoFull size={22} light />
+      </div>
+
+      {/* Color stripe */}
+      <div style={{ display:'flex', height:3 }}>
+        <div style={{flex:1,background:BRAND.terracotta}}/>
+        <div style={{flex:1,background:BRAND.sage}}/>
+        <div style={{flex:1,background:BRAND.purple}}/>
+      </div>
+
+      {/* Details */}
+      <div style={{ padding:'20px 24px' }}>
+        <div style={{ marginBottom:16 }}>
+          {[
+            { label:'When', value:'Saturday, May 17, 2026\n9:00 AM – 1:00 PM' },
+            { label:'Where', value:'Asheville, NC\n(Location shared on registration)' },
+            { label:'Who', value:'Educators, Coaches & Clinicians' },
+          ].map(row => (
+            <div key={row.label} style={{ display:'flex', gap:12, marginBottom:12, alignItems:'flex-start' }}>
+              <div style={{
+                background: BRAND.lightSage, color: BRAND.darkGreen,
+                fontSize:9, fontWeight:600, letterSpacing:'0.1em',
+                textTransform:'uppercase', padding:'3px 8px', borderRadius:100,
+                whiteSpace:'nowrap', marginTop:2,
+              }}>{row.label}</div>
+              <div style={{ fontSize:12, color:BRAND.darkText, lineHeight:1.5, whiteSpace:'pre-line' }}>{row.value}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{
+          background: BRAND.terracotta, color:'white',
+          padding:'12px 20px', borderRadius:100, textAlign:'center',
+          fontSize:13, fontWeight:600, letterSpacing:'0.02em',
+          marginBottom:14,
+        }}>Register at connectedcircles.netlify.app</div>
+
+        <div style={{ textAlign:'center', fontSize:11, color:BRAND.midText, opacity:0.7 }}>
+          Free & sliding-scale spots available
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PIECE 6: "We Serve" Social Graphic ───────────────────────
+function AudienceGraphic() {
+  const cards = [
+    { label:'Parents &\nCaregivers', color: BRAND.terracotta, bg: BRAND.lightTerra },
+    { label:'Educators\n& Teachers', color: BRAND.sage, bg: BRAND.lightSage },
+    { label:'Program\nDirectors', color: BRAND.purple, bg: BRAND.lightPurple },
+  ];
+  return (
+    <div style={{
+      width:360, background: BRAND.cream,
+      fontFamily:"'DM Sans', sans-serif",
+      overflow:'hidden', position:'relative',
+    }}>
+      <div style={{ background: BRAND.darkGreen, padding:'18px 24px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <LogoFull size={26} light />
+      </div>
+      <div style={{ padding:'24px 22px' }}>
+        <div style={{ fontSize:11, color:BRAND.midText, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:8 }}>Who we support</div>
+        <div style={{
+          fontFamily:"'Playfair Display', serif",
+          fontSize:20, color:BRAND.darkText, fontWeight:600, marginBottom:20, lineHeight:1.25,
+        }}>Everyone who shows up<br/>for children.</div>
+        <div style={{ display:'flex', gap:10, marginBottom:20 }}>
+          {cards.map(c => (
+            <div key={c.label} style={{
+              flex:1, background:c.bg, borderRadius:10, padding:'14px 12px',
+              borderTop:`3px solid ${c.color}`,
+            }}>
+              <div style={{
+                fontFamily:"'DM Sans', sans-serif",
+                fontSize:12, color:BRAND.darkText, fontWeight:500,
+                lineHeight:1.4, whiteSpace:'pre-line',
+              }}>{c.label}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize:11, color:BRAND.midText, textAlign:'center', opacity:0.7 }}>
+          connectedcircles.netlify.app · Asheville & Western NC
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────
+function App() {
+  const [tweakScale, setTweakScale] = React.useState(1);
+  const [showTweaks, setShowTweaks] = React.useState(false);
+
+  // Register Tweaks toggle
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setShowTweaks(true);
+      if (e.data?.type === '__deactivate_edit_mode') setShowTweaks(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection title="Social Media Posts" subtitle="Instagram / Facebook — 1:1 square format">
+          <DCArtboard label="Dark Green (primary)" width={360} height={360}>
+            <InstagramPost variant="green" />
+          </DCArtboard>
+          <DCArtboard label="Cream (light)" width={360} height={360}>
+            <InstagramPost variant="cream" />
+          </DCArtboard>
+          <DCArtboard label="Terracotta (warm)" width={360} height={360}>
+            <InstagramPost variant="terra" />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection title="Content Cards" subtitle="Quote story · Email header · Blog banner · Audience graphic">
+          <DCArtboard label="Quote / Story Card (9:16)" width={270} height={480}>
+            <QuoteCard />
+          </DCArtboard>
+          <DCArtboard label="Email Newsletter Header" width={420}>
+            <EmailHeader />
+          </DCArtboard>
+          <DCArtboard label="Blog Post Banner" width={420}>
+            <BlogBanner />
+          </DCArtboard>
+          <DCArtboard label="'Who We Serve' Social Graphic" width={360}>
+            <AudienceGraphic />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection title="Print Flyer" subtitle="Workshop / event handout — portrait">
+          <DCArtboard label="Workshop Flyer" width={300}>
+            <WorkshopFlyer />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      {/* Tweaks Panel */}
+      {showTweaks && (
+        <div style={{
+          position:'fixed', bottom:24, right:24,
+          background:'white', borderRadius:12,
+          boxShadow:'0 4px 24px rgba(0,0,0,0.15)',
+          padding:20, width:240, zIndex:9999,
+          fontFamily:"'DM Sans', sans-serif", fontSize:13,
+        }}>
+          <div style={{ fontWeight:600, marginBottom:14, color:BRAND.darkGreen, fontSize:14 }}>Tweaks</div>
+          <label style={{ display:'block', marginBottom:12, color:'#444' }}>
+            Content scale
+            <input type="range" min="0.6" max="1.4" step="0.05" value={tweakScale}
+              onChange={e => setTweakScale(parseFloat(e.target.value))}
+              style={{ width:'100%', marginTop:4 }}/>
+          </label>
+          <div style={{ fontSize:11, color:'#888', marginTop:8 }}>
+            Pinch or scroll to zoom the canvas. Drag background to pan.
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<div id="root"></div>
+</body>
+</html>
