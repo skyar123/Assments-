@@ -56,7 +56,7 @@
   }
   .logo-block { display: flex; align-items: center; gap: 16px; }
   .logo-block .logo-icon { width: 56px; height: 56px; flex-shrink: 0; }
-  .logo-block .logo-icon svg { width: 100%; height: 100%; display: block; }
+  .logo-block .logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .logo-block .wordmark {
     font-family: 'Cormorant Garamond', serif;
     font-size: 26px; font-weight: 500;
@@ -133,12 +133,13 @@
     margin: 0 auto;
     padding-top: 20px;
   }
-  .team-flower svg.bg {
+  .team-flower img.bg {
     position: absolute;
     top: 20px; left: 0;
     width: 320px; height: 320px;
     pointer-events: none;
-    opacity: 0.16;
+    opacity: 0.55;
+    object-fit: contain;
     z-index: 0;
   }
   .team-flower .center-icon {
@@ -150,7 +151,7 @@
     z-index: 0;
     opacity: 0.55;
   }
-  .team-flower .center-icon svg { width: 100%; height: 100%; display: block; }
+  .team-flower .center-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .team-flower .face {
     position: absolute;
     top: 50%; left: 50%;
@@ -424,74 +425,7 @@
 
   <header>
     <div class="logo-block">
-      <div class="logo-icon">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-68 -68 136 136">
-  <defs>
-    <filter id="h-wobble" x="-12%" y="-12%" width="124%" height="124%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.022 0.018" numOctaves="6" seed="17" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-    <!-- Grain pass -->
-    <filter id="h-grain">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="5" result="g"/>
-      <feColorMatrix type="saturate" values="0" in="g" result="gray"/>
-      <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="bl"/>
-      <feComposite in="bl" in2="SourceGraphic" operator="in"/>
-    </filter>
-    <!-- Outer-edge fade — like real ink drying out -->
-    <radialGradient id="h-vignette" cx="50%" cy="50%" r="50%">
-      <stop offset="20%" stop-color="white" stop-opacity="1"/>
-      <stop offset="60%" stop-color="white" stop-opacity="0.95"/>
-      <stop offset="82%" stop-color="white" stop-opacity="0.62"/>
-      <stop offset="100%" stop-color="white" stop-opacity="0.18"/>
-    </radialGradient>
-    <mask id="h-fade-mask">
-      <circle cx="0" cy="0" r="70" fill="url(#h-vignette)"/>
-    </mask>
-  </defs>
-
-  <!-- Pass 1: light ghost layer (depth in intersections) -->
-  <g filter="url(#h-wobble)" mask="url(#h-fade-mask)"
-     fill="none" stroke="#111110" stroke-width="1.1" opacity="0.32">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Pass 2: main bold strokes -->
-  <g filter="url(#h-wobble)" mask="url(#h-fade-mask)"
-     fill="none" stroke="#0f0f0e" stroke-width="2.1"
-     stroke-linecap="round" opacity="0.86">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Pass 3: grain / ink texture -->
-  <g filter="url(#h-grain)" mask="url(#h-fade-mask)"
-     fill="none" stroke="#111110" stroke-width="2.1" opacity="0.22">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Centre dot -->
-  <circle cx="0" cy="0" r="2.2" fill="#111110" opacity="0.88"/>
-</svg>
-
-      </div>
+      <div class="logo-icon"><img src="logo-mark.png" alt="ConnectEd Circles"/></div>
       <div class="wordmark">
         Connect<span style="color:var(--sage);">Ed</span> Circles
         <small>Asheville · Western North Carolina</small>
@@ -510,141 +444,10 @@
     <div>
       <div class="team-flower">
         <!-- Backdrop: hand-drawn at low opacity -->
-        <svg class="bg" opacity="0.42" xmlns="http://www.w3.org/2000/svg" viewBox="-68 -68 136 136">
-  <defs>
-    <filter id="b-wobble" x="-12%" y="-12%" width="124%" height="124%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.022 0.018" numOctaves="6" seed="17" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-    <!-- Grain pass -->
-    <filter id="b-grain">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="5" result="g"/>
-      <feColorMatrix type="saturate" values="0" in="g" result="gray"/>
-      <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="bl"/>
-      <feComposite in="bl" in2="SourceGraphic" operator="in"/>
-    </filter>
-    <!-- Outer-edge fade — like real ink drying out -->
-    <radialGradient id="b-vignette" cx="50%" cy="50%" r="50%">
-      <stop offset="20%" stop-color="white" stop-opacity="1"/>
-      <stop offset="60%" stop-color="white" stop-opacity="0.95"/>
-      <stop offset="82%" stop-color="white" stop-opacity="0.62"/>
-      <stop offset="100%" stop-color="white" stop-opacity="0.18"/>
-    </radialGradient>
-    <mask id="b-fade-mask">
-      <circle cx="0" cy="0" r="70" fill="url(#b-vignette)"/>
-    </mask>
-  </defs>
-
-  <!-- Pass 1: light ghost layer (depth in intersections) -->
-  <g filter="url(#b-wobble)" mask="url(#b-fade-mask)"
-     fill="none" stroke="#2d4a3e" stroke-width="1.1" opacity="0.32">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Pass 2: main bold strokes -->
-  <g filter="url(#b-wobble)" mask="url(#b-fade-mask)"
-     fill="none" stroke="#2d4a3e" stroke-width="2.1"
-     stroke-linecap="round" opacity="0.86">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Pass 3: grain / ink texture -->
-  <g filter="url(#b-grain)" mask="url(#b-fade-mask)"
-     fill="none" stroke="#2d4a3e" stroke-width="2.1" opacity="0.22">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Centre dot -->
-  <circle cx="0" cy="0" r="2.2" fill="#2d4a3e" opacity="0.88"/>
-</svg>
+        <img class="bg" src="logo-mark.png" alt=""/>
 
         <!-- Center icon: same hand-drawn mark -->
-        <div class="center-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-68 -68 136 136">
-  <defs>
-    <filter id="c-wobble" x="-12%" y="-12%" width="124%" height="124%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.022 0.018" numOctaves="6" seed="17" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-    <!-- Grain pass -->
-    <filter id="c-grain">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="5" result="g"/>
-      <feColorMatrix type="saturate" values="0" in="g" result="gray"/>
-      <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="bl"/>
-      <feComposite in="bl" in2="SourceGraphic" operator="in"/>
-    </filter>
-    <!-- Outer-edge fade — like real ink drying out -->
-    <radialGradient id="c-vignette" cx="50%" cy="50%" r="50%">
-      <stop offset="20%" stop-color="white" stop-opacity="1"/>
-      <stop offset="60%" stop-color="white" stop-opacity="0.95"/>
-      <stop offset="82%" stop-color="white" stop-opacity="0.62"/>
-      <stop offset="100%" stop-color="white" stop-opacity="0.18"/>
-    </radialGradient>
-    <mask id="c-fade-mask">
-      <circle cx="0" cy="0" r="70" fill="url(#c-vignette)"/>
-    </mask>
-  </defs>
-
-  <!-- Pass 1: light ghost layer (depth in intersections) -->
-  <g filter="url(#c-wobble)" mask="url(#c-fade-mask)"
-     fill="none" stroke="#111110" stroke-width="1.1" opacity="0.32">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Pass 2: main bold strokes -->
-  <g filter="url(#c-wobble)" mask="url(#c-fade-mask)"
-     fill="none" stroke="#0f0f0e" stroke-width="2.1"
-     stroke-linecap="round" opacity="0.86">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Pass 3: grain / ink texture -->
-  <g filter="url(#c-grain)" mask="url(#c-fade-mask)"
-     fill="none" stroke="#111110" stroke-width="2.1" opacity="0.22">
-    <circle cx="0"      cy="0"    r="36"/>
-    <circle cx="0"      cy="-36"  r="36"/>
-    <circle cx="31.18"  cy="-18"  r="36"/>
-    <circle cx="31.18"  cy="18"   r="36"/>
-    <circle cx="0"      cy="36"   r="36"/>
-    <circle cx="-31.18" cy="18"   r="36"/>
-    <circle cx="-31.18" cy="-18"  r="36"/>
-  </g>
-
-  <!-- Centre dot -->
-  <circle cx="0" cy="0" r="2.2" fill="#111110" opacity="0.88"/>
-</svg>
-
-        </div>
+        <div class="center-icon"><img src="logo-mark.png" alt=""/></div>
         <div class="face f1"><img src="team/skylar.jpg" alt="Skylar Belt"/></div>
         <div class="face f2"><img src="team/gabriel.jpg" alt="Gabriel Guyton"/></div>
         <div class="face f3"><img src="team/marcela.jpg" alt="Marcela Cuadra"/></div>
