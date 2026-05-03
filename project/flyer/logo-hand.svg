@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-68 -68 136 136">
+  <defs>
+    <filter id="wobble" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022 0.018" numOctaves="6" seed="17" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- Grain pass -->
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="5" result="g"/>
+      <feColorMatrix type="saturate" values="0" in="g" result="gray"/>
+      <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="bl"/>
+      <feComposite in="bl" in2="SourceGraphic" operator="in"/>
+    </filter>
+    <!-- Outer-edge fade — like real ink drying out -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="50%">
+      <stop offset="20%" stop-color="white" stop-opacity="1"/>
+      <stop offset="60%" stop-color="white" stop-opacity="0.95"/>
+      <stop offset="82%" stop-color="white" stop-opacity="0.62"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0.18"/>
+    </radialGradient>
+    <mask id="fade-mask">
+      <circle cx="0" cy="0" r="70" fill="url(#vignette)"/>
+    </mask>
+  </defs>
+
+  <!-- Pass 1: light ghost layer (depth in intersections) -->
+  <g filter="url(#wobble)" mask="url(#fade-mask)"
+     fill="none" stroke="#111110" stroke-width="1.1" opacity="0.32">
+    <circle cx="0"      cy="0"    r="36"/>
+    <circle cx="0"      cy="-36"  r="36"/>
+    <circle cx="31.18"  cy="-18"  r="36"/>
+    <circle cx="31.18"  cy="18"   r="36"/>
+    <circle cx="0"      cy="36"   r="36"/>
+    <circle cx="-31.18" cy="18"   r="36"/>
+    <circle cx="-31.18" cy="-18"  r="36"/>
+  </g>
+
+  <!-- Pass 2: main bold strokes -->
+  <g filter="url(#wobble)" mask="url(#fade-mask)"
+     fill="none" stroke="#0f0f0e" stroke-width="2.1"
+     stroke-linecap="round" opacity="0.86">
+    <circle cx="0"      cy="0"    r="36"/>
+    <circle cx="0"      cy="-36"  r="36"/>
+    <circle cx="31.18"  cy="-18"  r="36"/>
+    <circle cx="31.18"  cy="18"   r="36"/>
+    <circle cx="0"      cy="36"   r="36"/>
+    <circle cx="-31.18" cy="18"   r="36"/>
+    <circle cx="-31.18" cy="-18"  r="36"/>
+  </g>
+
+  <!-- Pass 3: grain / ink texture -->
+  <g filter="url(#grain)" mask="url(#fade-mask)"
+     fill="none" stroke="#111110" stroke-width="2.1" opacity="0.22">
+    <circle cx="0"      cy="0"    r="36"/>
+    <circle cx="0"      cy="-36"  r="36"/>
+    <circle cx="31.18"  cy="-18"  r="36"/>
+    <circle cx="31.18"  cy="18"   r="36"/>
+    <circle cx="0"      cy="36"   r="36"/>
+    <circle cx="-31.18" cy="18"   r="36"/>
+    <circle cx="-31.18" cy="-18"  r="36"/>
+  </g>
+
+  <!-- Centre dot -->
+  <circle cx="0" cy="0" r="2.2" fill="#111110" opacity="0.88"/>
+</svg>
