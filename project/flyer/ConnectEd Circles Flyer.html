@@ -54,25 +54,8 @@
     gap: 24px;
     flex-shrink: 0;
   }
-  .logo-block { display: flex; align-items: center; gap: 16px; }
-  .logo-block .logo-icon { width: 56px; height: 56px; flex-shrink: 0; }
-  .logo-block .logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .logo-block .wordmark {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px; font-weight: 500;
-    letter-spacing: 0;
-    color: var(--dark-green);
-    line-height: 1;
-  }
-  .logo-block .wordmark small {
-    display: block;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 9px; font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--sage);
-    margin-top: 6px;
-  }
+  .logo-block { display: flex; align-items: center; gap: 0; }
+  .logo-block .logo-badge { height: 96px; width: auto; display: block; }
   .header-tagline {
     font-family: 'Fraunces', serif;
     font-style: italic;
@@ -425,11 +408,7 @@
 
   <header>
     <div class="logo-block">
-      <div class="logo-icon"><img src="logo-mark.png" alt="ConnectEd Circles"/></div>
-      <div class="wordmark">
-        Connect<span style="color:var(--sage);">Ed</span> Circles
-        <small>Asheville · Western North Carolina</small>
-      </div>
+      <img class="logo-badge" src="logo-badge.png" alt="ConnectEd Circles"/>
     </div>
     <div class="header-tagline">We learn through<br/>connection.</div>
   </header>
@@ -443,11 +422,11 @@
     </div>
     <div>
       <div class="team-flower">
-        <!-- Backdrop: hand-drawn at low opacity -->
-        <img class="bg" src="logo-mark.png" alt=""/>
+        <!-- Backdrop: icon-only at low opacity -->
+        <img class="bg" src="logo-icon-real.png" alt=""/>
 
-        <!-- Center icon: same hand-drawn mark -->
-        <div class="center-icon"><img src="logo-mark.png" alt=""/></div>
+        <!-- Center icon: icon-only logo -->
+        <div class="center-icon"><img src="logo-icon-real.png" alt=""/></div>
         <div class="face f1"><img src="team/skylar.jpg" alt="Skylar Belt"/></div>
         <div class="face f2"><img src="team/gabriel.jpg" alt="Gabriel Guyton"/></div>
         <div class="face f3"><img src="team/marcela.jpg" alt="Marcela Cuadra"/></div>
