@@ -54,8 +54,25 @@
     gap: 24px;
     flex-shrink: 0;
   }
-  .logo-block { display: flex; align-items: center; gap: 0; }
-  .logo-block .logo-badge { height: 96px; width: auto; display: block; }
+  .logo-block { display: flex; align-items: center; gap: 14px; }
+  .logo-block .logo-icon { width: 60px; height: 60px; flex-shrink: 0; }
+  .logo-block .logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .logo-block .wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 500;
+    letter-spacing: 0;
+    color: var(--dark-green);
+    line-height: 1;
+  }
+  .logo-block .wordmark small {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px; font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-top: 7px;
+  }
   .header-tagline {
     font-family: 'Fraunces', serif;
     font-style: italic;
@@ -408,7 +425,11 @@
 
   <header>
     <div class="logo-block">
-      <img class="logo-badge" src="logo-badge.png" alt="ConnectEd Circles"/>
+      <div class="logo-icon"><img src="logo-icon-real.png" alt="ConnectEd Circles"/></div>
+      <div class="wordmark">
+        Connect<span style="color:var(--sage);">Ed</span> Circles
+        <small>Asheville · Western North Carolina</small>
+      </div>
     </div>
     <div class="header-tagline">We learn through<br/>connection.</div>
   </header>
@@ -422,11 +443,8 @@
     </div>
     <div>
       <div class="team-flower">
-        <!-- Backdrop: icon-only at low opacity -->
+        <!-- Single backdrop: icon-only at low opacity -->
         <img class="bg" src="logo-icon-real.png" alt=""/>
-
-        <!-- Center icon: icon-only logo -->
-        <div class="center-icon"><img src="logo-icon-real.png" alt=""/></div>
         <div class="face f1"><img src="team/skylar.jpg" alt="Skylar Belt"/></div>
         <div class="face f2"><img src="team/gabriel.jpg" alt="Gabriel Guyton"/></div>
         <div class="face f3"><img src="team/marcela.jpg" alt="Marcela Cuadra"/></div>
