@@ -32,7 +32,8 @@
   }
   body {
     min-height: 100vh;
-    display: flex; align-items: flex-start; justify-content: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: 40px;
     padding: 40px 20px;
   }
   .page {
@@ -84,10 +85,10 @@
 
   /* HERO */
   .hero {
-    padding: 14px 52px 26px;
+    padding: 10px 52px 14px;
     display: grid;
     grid-template-columns: 1.05fr 0.95fr;
-    gap: 36px;
+    gap: 24px;
     align-items: center;
     flex-shrink: 0;
   }
@@ -102,12 +103,12 @@
   }
   .hero h1 {
     font-family: 'Fraunces', serif;
-    font-size: 46px;
+    font-size: 38px;
     font-weight: 400;
-    line-height: 0.98;
-    letter-spacing: -0.028em;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
     color: var(--dark-green);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     text-wrap: balance;
   }
   .hero h1 em {
@@ -117,8 +118,8 @@
   }
   .hero .lede {
     font-family: 'Fraunces', serif;
-    font-size: 14.5px;
-    line-height: 1.45;
+    font-size: 13px;
+    line-height: 1.4;
     color: var(--ink-soft);
     font-weight: 400;
     text-wrap: pretty;
@@ -128,15 +129,15 @@
   /* TEAM FLOWER */
   .team-flower {
     position: relative;
-    width: 320px;
-    height: 340px;
+    width: 260px;
+    height: 278px;
     margin: 0 auto;
-    padding-top: 20px;
+    padding-top: 16px;
   }
   .team-flower img.bg {
     position: absolute;
-    top: 20px; left: 0;
-    width: 320px; height: 320px;
+    top: 16px; left: 0;
+    width: 260px; height: 260px;
     pointer-events: none;
     opacity: 0.55;
     object-fit: contain;
@@ -155,8 +156,8 @@
   .team-flower .face {
     position: absolute;
     top: 50%; left: 50%;
-    width: 78px; height: 78px;
-    margin-top: -39px; margin-left: -39px;
+    width: 64px; height: 64px;
+    margin-top: -32px; margin-left: -32px;
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid var(--paper);
@@ -168,13 +169,13 @@
     object-fit: cover;
     display: block;
   }
-  .team-flower .face.f1 { transform: translate(0px, -110px); }
-  .team-flower .face.f2 { transform: translate(88px, -68px); }
-  .team-flower .face.f3 { transform: translate(110px, 26px); }
-  .team-flower .face.f4 { transform: translate(48px, 102px); }
-  .team-flower .face.f5 { transform: translate(-48px, 102px); }
-  .team-flower .face.f6 { transform: translate(-110px, 26px); }
-  .team-flower .face.f7 { transform: translate(-88px, -68px); }
+  .team-flower .face.f1 { transform: translate(0px, -89px); }
+  .team-flower .face.f2 { transform: translate(72px, -55px); }
+  .team-flower .face.f3 { transform: translate(89px, 21px); }
+  .team-flower .face.f4 { transform: translate(39px, 83px); }
+  .team-flower .face.f5 { transform: translate(-39px, 83px); }
+  .team-flower .face.f6 { transform: translate(-89px, 21px); }
+  .team-flower .face.f7 { transform: translate(-72px, -55px); }
 
   .team-caption {
     margin-top: 14px;
@@ -195,8 +196,8 @@
     padding: 0 52px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-bottom: 26px;
+    gap: 14px;
+    margin-bottom: 14px;
     flex-shrink: 0;
   }
   .pillar { padding-top: 12px; border-top: 2px solid var(--rule); }
@@ -230,8 +231,8 @@
     text-transform: uppercase;
     color: var(--sage);
     font-weight: 600;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
     border-bottom: 1px solid var(--rule);
     display: flex;
     justify-content: space-between;
@@ -249,7 +250,7 @@
   .offerings-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px 24px;
+    gap: 7px 20px;
   }
   .offering {
     display: grid;
@@ -258,20 +259,20 @@
     align-items: start;
   }
   .offering .icon-circle {
-    width: 32px; height: 32px;
+    width: 28px; height: 28px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 1px;
   }
   .offering:nth-child(1) .icon-circle { background: var(--terra-lt); }
   .offering:nth-child(2) .icon-circle { background: var(--sage-bg); }
   .offering:nth-child(3) .icon-circle { background: var(--purple-lt); }
   .offering:nth-child(4) .icon-circle { background: var(--cream); }
-  .offering .icon-circle svg { width: 16px; height: 16px; }
+  .offering .icon-circle svg { width: 14px; height: 14px; }
   .offering h5 {
     font-family: 'Fraunces', serif;
-    font-size: 14.5px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--dark-green);
     margin-bottom: 2px;
@@ -279,14 +280,14 @@
     line-height: 1.2;
   }
   .offering p {
-    font-size: 11px;
-    line-height: 1.45;
+    font-size: 10.5px;
+    line-height: 1.4;
     color: var(--ink-soft);
   }
   .offering.full-row {
     grid-column: 1 / -1;
-    margin-top: 6px;
-    padding-top: 14px;
+    margin-top: 4px;
+    padding-top: 10px;
     border-top: 1px solid var(--rule);
   }
   .offering.full-row .icon-circle {
@@ -300,8 +301,8 @@
   footer {
     background: var(--dark-green);
     color: var(--cream);
-    padding: 22px 52px 20px;
-    margin-top: 24px;
+    padding: 14px 52px 14px;
+    margin-top: auto;
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
@@ -396,6 +397,12 @@
     color: var(--sage-lt);
   }
 
+  /* SPANISH PAGE overrides */
+  .page-es .hero h1 { font-size: 30px; margin-bottom: 10px; }
+  .page-es .hero .lede { font-size: 12px; }
+  .page-es .logo-block .wordmark { font-size: 24px; }
+  .page-es .logo-block .wordmark small { letter-spacing: 0.1em; font-size: 8px; }
+
   /* PRINT */
   @media print {
     @page { size: letter; margin: 0; }
@@ -404,11 +411,13 @@
     .page {
       box-shadow: none;
       width: 8.5in; height: 11in;
-      page-break-after: avoid;
+      page-break-after: always;
+      break-after: page;
       break-inside: avoid;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
+    .page:last-child { page-break-after: avoid; break-after: avoid; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
@@ -580,6 +589,176 @@
       <strong>Asheville, NC</strong><br/>
       Serving Western<br/>North Carolina
       <div class="langs">English &amp; Español</div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- PAGE 2: SPANISH -->
+<div class="page page-es">
+
+  <div class="strip">
+    <span style="background:var(--terracotta);"></span>
+    <span style="background:var(--sage);"></span>
+    <span style="background:var(--purple);"></span>
+  </div>
+
+  <header>
+    <div class="logo-block">
+      <div class="logo-icon"><img src="logo-icon-real.png" alt="ConnectEd Circles"/></div>
+      <div class="wordmark">
+        Connect<span style="color:var(--sage);">Ed</span> Circles
+        <small>Asheville · NC Occidental</small>
+      </div>
+    </div>
+    <div class="header-tagline">Aprendemos a través<br/>de la conexión.</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Apoyo para quienes crían niños pequeños</div>
+      <h1>Apoyo atento <em>para los adultos</em> que crían niños.</h1>
+      <p class="lede">Un pequeño equipo de educadores, clínicos y practicantes bilingües en el oeste de Carolina del Norte, que ofrece capacitación, consultoría y grupos que acompañan a las familias y maestros exactamente donde están.</p>
+    </div>
+    <div>
+      <div class="team-flower">
+        <img class="bg" src="logo-icon-real.png" alt=""/>
+        <div class="face f1"><img src="team/skylar.jpg" alt="Skylar Belt"/></div>
+        <div class="face f2"><img src="team/gabriel.jpg" alt="Gabriel Guyton"/></div>
+        <div class="face f3"><img src="team/marcela.jpg" alt="Marcela Cuadra"/></div>
+        <div class="face f4"><img src="team/turkessa.jpg" alt="Turkessa Baten"/></div>
+        <div class="face f5"><img src="team/omi.jpg" alt="Omaira Ojeda"/></div>
+        <div class="face f6"><img src="team/anja.jpg" alt="Anja Mayr"/></div>
+        <div class="face f7"><img src="team/james.jpg" alt="James Fuller"/></div>
+      </div>
+      <div class="team-caption">
+        <span>Conoce al equipo</span> &nbsp;·&nbsp; Skylar &middot; Gabriel &middot; Marcela &middot; Turkessa &middot; Omi &middot; Anja &middot; James
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars">
+    <div class="pillar">
+      <h4>Práctica reflexiva</h4>
+      <p>Nos sentamos al lado, no por encima. Un trabajo pausado que respeta cómo aprenden realmente las familias y los maestros.</p>
+    </div>
+    <div class="pillar">
+      <h4>Enfoque de trauma</h4>
+      <p>Honestos sobre lo difícil. Firmes en ayudar a los adultos alrededor de los niños pequeños a mantenerse regulados y presentes.</p>
+    </div>
+    <div class="pillar">
+      <h4>Bilingüe<br/>Inglés &amp; Español</h4>
+      <p>Todos los servicios disponibles en ambos idiomas, conducidos por hablantes nativos. <em>English &amp; Spanish.</em></p>
+    </div>
+  </section>
+
+  <!-- OFFERINGS -->
+  <section class="offerings">
+    <div class="section-label">
+      <span>Lo que ofrecemos</span>
+      <em>Para familias, maestros y programas</em>
+    </div>
+
+    <div class="offerings-grid">
+
+      <div class="offering">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#c97b4b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+            <circle cx="8" cy="6" r="1" fill="#c97b4b"/>
+          </svg>
+        </div>
+        <div>
+          <h5>Talleres y apoyo para el autismo</h5>
+          <p>Capacitación, consultoría y apoyo familiar, basados en la dignidad, la conciencia sensorial y la experiencia vivida.</p>
+        </div>
+      </div>
+
+      <div class="offering">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5d8272" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="9" r="2.2"/>
+            <circle cx="15" cy="9" r="2.2"/>
+            <path d="M5 14c0-3 3-5 7-5s7 2 7 5v3c0 1-1 2-2 2H7c-1 0-2-1-2-2v-3z"/>
+            <path d="M3 11c0-1.5 1-2.5 2-2.5"/>
+            <path d="M21 11c0-1.5-1-2.5-2-2.5"/>
+            <path d="M11 14h2"/>
+          </svg>
+        </div>
+        <div>
+          <h5>El Programa BEAR</h5>
+          <p>Juego guiado con ositos de peluche en aulas de primera infancia, invitando sentimientos, historias y sanación.</p>
+        </div>
+      </div>
+
+      <div class="offering">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b7aa8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 4h11l3 3v13H5z"/>
+            <path d="M16 4v3h3"/>
+            <path d="M8 12h8M8 15h8M8 18h5"/>
+          </svg>
+        </div>
+        <div>
+          <h5>Notas de campo</h5>
+          <p>Ensayos, capacitación y recursos de nuestra práctica, para quienes cuidan vidas pequeñas.</p>
+        </div>
+      </div>
+
+      <div class="offering">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2d4a3e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11c0 4.5-4 8-9 8-1.4 0-2.7-.3-3.9-.7L4 20l1-3.5C3.7 15.2 3 13.2 3 11c0-4.5 4-8 9-8s9 3.5 9 8z"/>
+            <circle cx="9" cy="11" r=".8" fill="#2d4a3e"/>
+            <circle cx="12" cy="11" r=".8" fill="#2d4a3e"/>
+            <circle cx="15" cy="11" r=".8" fill="#2d4a3e"/>
+          </svg>
+        </div>
+        <div>
+          <h5>Consultoría reflexiva</h5>
+          <p>Supervisión individual y de equipo para educadores, visitadores del hogar y clínicos.</p>
+        </div>
+      </div>
+
+      <div class="offering full-row">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2d4a3e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19h16"/>
+            <path d="M4 19V5"/>
+            <path d="M7 15l4-4 3 2 5-6"/>
+            <circle cx="7" cy="15" r="1.2" fill="#2d4a3e"/>
+            <circle cx="11" cy="11" r="1.2" fill="#2d4a3e"/>
+            <circle cx="14" cy="13" r="1.2" fill="#2d4a3e"/>
+            <circle cx="19" cy="7" r="1.2" fill="#2d4a3e"/>
+          </svg>
+        </div>
+        <div>
+          <h5>Investigación y evaluación</h5>
+          <p>Evaluación de programas, encuestas e investigación de resultados para organizaciones de primera infancia y quienes las financian. Los números, sostenidos con la misma atención que traemos a un aula.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER (CTA) -->
+  <footer>
+    <div class="qr-block">
+      <img src="qr-es.png" alt="QR code to connectedcirclescommunity.com/es/"/>
+    </div>
+    <div class="footer-mid">
+      <div class="cta-eyebrow">Inicia una conversación</div>
+      <div class="cta-headline">Escanea, visita o escribe. <em>Nos encantaría conocerte.</em></div>
+      <div class="cta-url"><strong>connectedcirclescommunity.com/es/</strong> &nbsp;·&nbsp; hello@connectedcircles.org</div>
+    </div>
+    <div class="footer-right">
+      <div class="label">Con sede en</div>
+      <strong>Asheville, NC</strong><br/>
+      Sirviendo el oeste de<br/>Carolina del Norte
+      <div class="langs">Inglés y Español</div>
     </div>
   </footer>
 
